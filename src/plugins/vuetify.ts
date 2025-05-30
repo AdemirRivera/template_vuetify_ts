@@ -8,6 +8,10 @@
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
+// Utils
+import { es } from 'vuetify/locale'
+import DayjsUtils from '@date-io/dayjs'
+
 // Composables
 import { createVuetify } from 'vuetify'
 
@@ -16,4 +20,19 @@ export default createVuetify({
   theme: {
     defaultTheme: 'dark',
   },
+
+  date: {
+    adapter: DayjsUtils,
+  },
+
+  locale: {
+    locale: 'es',
+    messages: { es },
+  },
 })
+
+declare module 'vuetify' {
+  namespace DateModule {
+    interface Adapter extends DayjsUtils {}
+  }
+}
