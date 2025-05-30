@@ -1,0 +1,42 @@
+{
+  "name": "template_vue_3",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run type-check && npm run build-only",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "@fontsource/roboto": "5.2.5",
+    "@mdi/font": "7.4.47",
+    "axios": "^1.9.0",
+    "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "vue3-toastify": "^0.2.8",
+    "vuetify": "^3.8.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.9.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.23.0",
+    "eslint-config-vuetify": "^3.0.3",
+    "sass-embedded": "^1.86.3",
+    "typescript": "~5.8.2",
+    "unplugin-auto-import": "^19.1.1",
+    "unplugin-fonts": "^1.3.1",
+    "unplugin-vue-components": "^28.4.1",
+    "vite": "^6.2.2",
+    "vite-plugin-vuetify": "^2.1.1",
+    "vue-tsc": "^2.2.8"
+  }
+}
