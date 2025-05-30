@@ -61,6 +61,7 @@
     "toRef": true,
     "toRefs": true,
     "toValue": true,
+    "toast": true,
     "triggerRef": true,
     "unref": true,
     "useAttrs": true,
