@@ -17,6 +17,7 @@ export default defineConfig({
         'vue',
         {
           'pinia': ['defineStore', 'storeToRefs'],
+          'vuetify': ['useDisplay'],
           'vue3-toastify': [
             ['toast', 'useNotification'],
           ],

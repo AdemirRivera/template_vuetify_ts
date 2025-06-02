@@ -67,6 +67,7 @@
     "useCssModule": true,
     "useCssVars": true,
     "useDayJs": true,
+    "useDisplay": true,
     "useId": true,
     "useModel": true,
     "useNotification": true,

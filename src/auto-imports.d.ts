@@ -60,6 +60,7 @@ declare global {
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useDayJs: typeof import('dayjs')['default']
+  const useDisplay: typeof import('vuetify')['useDisplay']
   const useId: typeof import('vue')['useId']
   const useModel: typeof import('vue')['useModel']
   const useNotification: typeof import('vue3-toastify')['toast']
@@ -135,6 +136,7 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useDayJs: UnwrapRef<typeof import('dayjs')['default']>
+    readonly useDisplay: UnwrapRef<typeof import('vuetify')['useDisplay']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useNotification: UnwrapRef<typeof import('vue3-toastify')['toast']>
