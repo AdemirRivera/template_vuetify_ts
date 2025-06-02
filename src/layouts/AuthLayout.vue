@@ -17,7 +17,7 @@
         v-if="lgAndUp"
       />
 
-      <v-card elevation="2" class="pa-5" max-width="455" rounded="lg">
+      <v-card elevation="2" class="pa-5 w-100" max-width="455" rounded="lg">
         <router-view />
       </v-card>
     </div>
