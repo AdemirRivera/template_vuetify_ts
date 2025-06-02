@@ -8,16 +8,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
+import authRoutes from '../modules/auth/router'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('../layouts/default.vue'),
+    component: () => import('../layouts/DefaultLayout.vue'),
     children: [
       {
         path: '',
         name: 'home',
         component: () => import('../pages/index.vue')
       }
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('../layouts/AuthLayout.vue'),
+    children: [
+      ...authRoutes
     ]
   },
   {
