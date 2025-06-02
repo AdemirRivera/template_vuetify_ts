@@ -11,14 +11,20 @@ import type { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/layouts/default.vue'),
+    component: () => import('../layouts/default.vue'),
     children: [
       {
         path: '',
         name: 'home',
-        component: () => import('@/pages/index.vue')
+        component: () => import('../pages/index.vue')
       }
     ]
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "forbidden",
+    component: () => import("../pages/ForbiddenView.vue"),
+    meta: { requiresAuth: false, title: "Forbidden" },
   },
 ]
 
