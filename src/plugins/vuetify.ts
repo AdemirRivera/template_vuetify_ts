@@ -11,6 +11,7 @@ import 'vuetify/styles'
 // Utils
 import { es } from 'vuetify/locale'
 import DayjsUtils from '@date-io/dayjs'
+import esp from 'dayjs/locale/es'
 
 // Composables
 import { createVuetify } from 'vuetify'
@@ -23,6 +24,7 @@ export default createVuetify({
 
   date: {
     adapter: DayjsUtils,
+    locale: { esp }
   },
 
   locale: {
@@ -33,6 +35,6 @@ export default createVuetify({
 
 declare module 'vuetify' {
   namespace DateModule {
-    interface Adapter extends DayjsUtils {}
+    interface Adapter extends DayjsUtils { }
   }
 }

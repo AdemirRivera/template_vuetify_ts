@@ -22,21 +22,15 @@
             rounded="lg"
             variant="tonal"
           >
-            <template #image>
-              <v-img position="top right" />
-            </template>
+          <div>
 
-            <template #title>
-              <h2 class="text-h5 font-weight-bold">
-                Get started
-              </h2>
-            </template>
+            <v-btn
+            @click="TestFn()"
+            >
+              test
+            </v-btn>
 
-            <template #subtitle>
-              <div class="text-subtitle-1">
-                Change this page by updating <v-kbd>{{ `<HelloWorld />` }}</v-kbd> in <v-kbd>components/HelloWorld.vue</v-kbd>.
-              </div>
-            </template>
+          </div>
           </v-card>
         </v-col>
 
@@ -61,6 +55,13 @@
 </template>
 
 <script setup lang="ts">
+
+const TestFn = () => {
+  console.log( useDayJs('2025-04-25').format('DD/MM/YYYY') );
+  // console.log( useDayJs );
+  useNotification('Wow test 123')
+}
+
   const links = [
     {
       href: 'https://vuetifyjs.com/',

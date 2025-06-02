@@ -17,10 +17,11 @@ export default defineConfig({
         'vue',
         {
           'pinia': ['defineStore', 'storeToRefs'],
-        },
-        {
           'vue3-toastify': [
-            ['toast'],
+            ['toast', 'useNotification'],
+          ],
+          'dayjs': [
+            ['default', 'useDayJs'],
           ],
         },
       ],
