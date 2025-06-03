@@ -37,6 +37,7 @@
               :disabled="!pass.value.value"
               :icon="showPass ? 'mdi-eye-off' : 'mdi-eye'"
               @click="showPass = !showPass"
+              :color="pass.errors.value.length > 0 ? 'error' : ''"
             />
           </template>
         </v-text-field>
@@ -54,13 +55,13 @@
 
     <br />
     <div class="d-flex justify-center text-center flex-column">
-      <!-- <spacer-component /> -->
-      <!-- <recovery-password-component /> -->
+      <RecoveryPasswordComponent />
     </div>
   </v-form>
 </template>
 
 <script lang="ts" setup>
+import RecoveryPasswordComponent from '../components/RecoveryPasswordComponent.vue'
 import useLogin from '../composables/useLogin'
 
 const {
