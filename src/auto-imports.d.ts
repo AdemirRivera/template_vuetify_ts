@@ -26,8 +26,6 @@ declare global {
   const nextTick: typeof import('vue')['nextTick']
   const onActivated: typeof import('vue')['onActivated']
   const onBeforeMount: typeof import('vue')['onBeforeMount']
-  const onBeforeRouteLeave: typeof import('vue-router')['onBeforeRouteLeave']
-  const onBeforeRouteUpdate: typeof import('vue-router')['onBeforeRouteUpdate']
   const onBeforeUnmount: typeof import('vue')['onBeforeUnmount']
   const onBeforeUpdate: typeof import('vue')['onBeforeUpdate']
   const onDeactivated: typeof import('vue')['onDeactivated']
@@ -61,6 +59,8 @@ declare global {
   const useCssVars: typeof import('vue')['useCssVars']
   const useDayJs: typeof import('dayjs')['default']
   const useDisplay: typeof import('vuetify')['useDisplay']
+  const useField: typeof import('vee-validate')['useField']
+  const useForm: typeof import('vee-validate')['useForm']
   const useId: typeof import('vue')['useId']
   const useModel: typeof import('vue')['useModel']
   const useNotification: typeof import('vue3-toastify')['toast']
@@ -137,9 +137,13 @@ declare module 'vue' {
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useDayJs: UnwrapRef<typeof import('dayjs')['default']>
     readonly useDisplay: UnwrapRef<typeof import('vuetify')['useDisplay']>
+    readonly useField: UnwrapRef<typeof import('vee-validate')['useField']>
+    readonly useForm: UnwrapRef<typeof import('vee-validate')['useForm']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useNotification: UnwrapRef<typeof import('vue3-toastify')['toast']>
+    readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
+    readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>

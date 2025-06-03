@@ -17,6 +17,8 @@ export default defineConfig({
         'vue',
         {
           'pinia': ['defineStore', 'storeToRefs'],
+          'vue-router': ['useRoute', 'useRouter'],
+          'vee-validate': ['useForm', 'useField'],
           'vuetify': ['useDisplay'],
           'vue3-toastify': [
             ['toast', 'useNotification'],

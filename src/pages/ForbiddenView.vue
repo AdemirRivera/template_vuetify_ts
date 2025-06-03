@@ -6,7 +6,7 @@
   >
     <template v-slot:actions>
       <v-btn
-        v-if="true"
+        v-if="hasToken"
         class="text-none"
         rounded="lg"
         text="Regresar"

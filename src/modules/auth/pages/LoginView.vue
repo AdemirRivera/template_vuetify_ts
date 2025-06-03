@@ -2,7 +2,7 @@
   <div class="d-flex text-center justify-center flex-column">
     <span class="text-h5 text-primary"> TEMPLATE </span>
   </div>
-  <v-form @submit.prevent="() => {}" class="mb-10 mt-5" ref="form">
+  <v-form @submit.prevent="loginUser" class="mb-10 mt-5" ref="form">
     <div class="text-center">
       <span class="text-h6 text-primary"> Iniciar sesión </span>
     </div>
@@ -10,31 +10,34 @@
     <div class="px-10">
       <div class="mt-4">
         <v-text-field
-          :rules="[]"
           autocomplete="username"
-          label="Correo electrónico"
+          label="Correo electrónico *"
           placeholder="Ingresa tu correo electrónico"
           maxlength="50"
           prepend-inner-icon="mdi-account"
+          v-model="email.value.value"
+          :error-messages="email.errorMessage.value"
         />
       </div>
       <div>
-        <!-- :type="show_pass_var ? 'text' : 'password'" -->
         <v-text-field
-          :rules="[]"
           autocomplete="current-password"
           class="pt-3"
           label="Contraseña"
           maxlength="50"
           placeholder="Ingresa tu contraseña"
           prepend-inner-icon="mdi-lock"
+          :type="showPass ? 'text' : 'password'"
+          v-model="pass.value.value"
+          :error-messages="pass.errorMessage.value"
         >
           <template #append-inner>
-            <!-- :disabled="!pass_var"
-              :icon="show_pass_var ? 'mdi-eye-off' : 'mdi-eye'"
-              @click="show_pass_var = !show_pass_var"
-              :color="getItemColor(1)" -->
-            <v-btn variant="plain" />
+            <v-btn
+              variant="plain"
+              :disabled="!pass.value.value"
+              :icon="showPass ? 'mdi-eye-off' : 'mdi-eye'"
+              @click="showPass = !showPass"
+            />
           </template>
         </v-text-field>
       </div>
@@ -56,3 +59,15 @@
     </div>
   </v-form>
 </template>
+
+<script lang="ts" setup>
+import useLogin from '../composables/useLogin'
+
+const {
+  email,
+  pass,
+  showPass,
+
+  loginUser
+} = useLogin()
+</script>
