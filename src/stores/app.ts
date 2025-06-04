@@ -1,8 +1,9 @@
-// Utilities
-import { defineStore } from 'pinia'
+interface State {
+  showLoader: boolean
+}
 
 export const useAppStore = defineStore('app', {
-  state: () => ({
-    //
+  state: (): State => ({
+    showLoader: false
   }),
 })
