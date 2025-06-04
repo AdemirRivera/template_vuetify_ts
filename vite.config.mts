@@ -20,6 +20,7 @@ export default defineConfig({
           'vue-router': ['useRoute', 'useRouter'],
           'vee-validate': ['useForm', 'useField'],
           'vuetify': ['useDisplay'],
+          '@tanstack/vue-query': ['useQuery', 'useMutation', 'useQueryClient '],
           'vue3-toastify': [
             ['toast', 'useNotification'],
           ],
