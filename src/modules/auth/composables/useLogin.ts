@@ -1,7 +1,11 @@
+import { useAppStore } from "@/stores/app";
 import { opinionesSchema } from "../login.schema"
+import authServices from "../auth.services";
 import type { InferType } from 'yup';
 
 type LoginForm = InferType<typeof opinionesSchema>;
+
+const Store = useAppStore()
 
 interface UseLoginReturn {
     email: string;
@@ -21,7 +25,14 @@ export default function useLogin<UseLoginReturn>() {
     const pass = useField<string>('pass')
 
     const loginUser = handleSubmit(values => {
-        console.log(values);
+        loginMutation.mutate({ email: values.email, password: values.pass })
+    })
+
+    const loginMutation = useMutation({
+        mutationFn: authServices.login,
+        onSuccess: (data) => {
+            Store.setAuth(data.data)
+        }
     })
 
     return {

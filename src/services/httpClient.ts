@@ -174,7 +174,7 @@ httpClient.interceptors.response.use(
     (response: AxiosResponse) => {
         // Ocultar loader
         try {
-            Store.showLoader = true
+            Store.showLoader = false
         } catch (_) {
             // Silencioso
         }
