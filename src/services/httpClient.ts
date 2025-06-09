@@ -1,7 +1,5 @@
 import { useAppStore } from '../stores/app'
 
-const Store = useAppStore()
-
 import axios, {
     type AxiosInstance,
     type AxiosRequestConfig,
@@ -134,6 +132,8 @@ function getFreshToken(): Promise<string> {
 // --- 6. Interceptor de peticiones (Request) ---
 httpClient.interceptors.request.use(
     (config) => {
+        const Store = useAppStore()
+
         // Mostrar loader si no se desactiva explícitamente
         if (!config.headers?.["disableLoader"]) {
             Store.showLoader = true;
@@ -159,6 +159,7 @@ httpClient.interceptors.request.use(
         return config;
     },
     (error) => {
+        const Store = useAppStore()
         // En caso de error en request, ocultar loader si corresponde
         try {
             Store.showLoader = false;
@@ -172,6 +173,7 @@ httpClient.interceptors.request.use(
 // --- 7. Interceptor de respuestas (Response) ---
 httpClient.interceptors.response.use(
     (response: AxiosResponse) => {
+        const Store = useAppStore()
         // Ocultar loader
         try {
             Store.showLoader = false
@@ -183,6 +185,7 @@ httpClient.interceptors.response.use(
     async (error: AxiosError) => {
         // Ocultar loader
         try {
+            const Store = useAppStore()
             Store.showLoader = false
         } catch (_) {
             // Silencioso
