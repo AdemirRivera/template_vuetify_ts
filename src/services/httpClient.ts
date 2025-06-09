@@ -4,7 +4,6 @@ import axios, {
     type AxiosInstance,
     type AxiosRequestConfig,
     type AxiosResponse,
-    AxiosError,
 } from "axios";
 
 // --- 1. Tipos específicos para la respuesta de refresh ---
@@ -172,7 +171,7 @@ httpClient.interceptors.request.use(
 
 // --- 7. Interceptor de respuestas (Response) ---
 httpClient.interceptors.response.use(
-    (response: AxiosResponse) => {
+    (response) => {
         const Store = useAppStore()
         // Ocultar loader
         try {
@@ -182,7 +181,7 @@ httpClient.interceptors.response.use(
         }
         return response;
     },
-    async (error: AxiosError) => {
+    async (error) => {
         // Ocultar loader
         try {
             const Store = useAppStore()

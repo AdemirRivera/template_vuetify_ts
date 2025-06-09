@@ -1,17 +1,11 @@
 import { opinionesSchema } from "../login.schema"
 import authServices from "../auth.services";
 import type { InferType } from 'yup';
+import type { UseLoginReturn } from "../auth.interfaces";
 
 type LoginForm = InferType<typeof opinionesSchema>;
 
-interface UseLoginReturn {
-    email: string;
-    pass: string;
-    showPass: Ref<boolean>;
-    loginUser: () => void;
-}
-
-export default function useLogin<UseLoginReturn>() {
+export default function useLogin(): UseLoginReturn {
     const showPass = ref<boolean>(false)
 
     const { handleSubmit } = useForm<LoginForm>({
@@ -28,7 +22,7 @@ export default function useLogin<UseLoginReturn>() {
     const loginMutation = useMutation({
         mutationFn: authServices.login,
         onSuccess: (data) => {
-            const { token, refresh_token: refreshToken } = data.data
+            const { token, refresh_token: refreshToken } = data
 
             localStorage.setItem('token', token)
             localStorage.setItem('refresh_token', refreshToken)
