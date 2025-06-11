@@ -1,11 +1,11 @@
-import appServices from "@/services/app.services"
-import type { User, Route } from "./store.interfaces"
+import appServices from "@/services/app.service"
+import type { User, Route } from "@/interfaces/general.interface"
 
 interface State {
   showLoader: boolean,
-  userInfo: User | object,
-  menuRoutes: [],
-  pathRoutes: [],
+  userInfo: Partial<User>,
+  menuRoutes: Route[],
+  pathRoutes: Route[],
 }
 
 export const useAppStore = defineStore('app', {
@@ -32,22 +32,20 @@ export const useAppStore = defineStore('app', {
 
     async fetchRoutes() {
 
-      const filterMenu = (routes_params: Route[]) => {
-        return routes_params.filter((route: Route) => {
-          if (!route.mostrar) return false
-          if (route.childs) {
-            if (route.childs.length > 0) route.childs = filterMenu(route.childs)
-            return true
-          }
-        })
-      }
+      const filterMenu = (routes: Route[]): Route[] =>
+        routes
+          .filter(route => route.mostrar === 1)
+          .map(route => ({
+            ...route,
+            childs: filterMenu(route.childs)
+          }));
 
       try {
-        const { data, status } = appServices.getAuthorizedPaths()
+        const { data, status } = await appServices.getAuthorizedPaths()
 
         if (status === 200) {
           this.pathRoutes = JSON.parse(JSON.stringify(data))
-          this.menuRoutes = data
+          this.menuRoutes = filterMenu(data)
         }
       } catch (error) {
         console.error(error)

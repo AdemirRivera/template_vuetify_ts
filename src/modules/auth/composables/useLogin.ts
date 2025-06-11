@@ -21,11 +21,11 @@ export default function useLogin(): UseLoginReturn {
 
     const loginMutation = useMutation({
         mutationFn: authServices.login,
-        onSuccess: (data) => {
-            const { token, refresh_token: refreshToken } = data
+        onSuccess: (resp) => {
+            const { token, refresh_token } = resp.data
 
             localStorage.setItem('token', token)
-            localStorage.setItem('refresh_token', refreshToken)
+            localStorage.setItem('refresh_token', refresh_token)
         }
     })
 
