@@ -23,11 +23,8 @@ const searchPath = (storePaths: Route[], route: RouteLocationNormalized): boolea
 }
 
 export default async (route: RouteLocationNormalized) => {
-
     if (!route.name) return false
-
     if (Store.pathRoutes.length === 0) await Store.fetchRoutes()
-
     if (!Store.userInfo?.nombre) await Store.fetchUserInfo()
 
     return searchPath(Store.pathRoutes, route)
