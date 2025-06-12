@@ -193,7 +193,7 @@ httpClient.interceptors.response.use(
         // Si no hay conectividad (status 0 o sin respuesta), notificamos
         if (error.request && !error.response) {
             try {
-                toast(ERROR_MESSAGES.noConexion, {
+                useNotification(ERROR_MESSAGES.noConexion, {
                     "theme": "colored",
                     "type": "error",
                     "hideProgressBar": true,
@@ -219,14 +219,13 @@ httpClient.interceptors.response.use(
 
                 // Notificamos al usuario
                 try {
-                    toast(ERROR_MESSAGES.sesionActualizada, {
+                    useNotification(ERROR_MESSAGES.sesionActualizada, {
                         "theme": "colored",
                         "type": "info",
                         "autoClose": 500,
                         "hideProgressBar": true,
                         "dangerouslyHTMLString": true,
                         "transition": "slide"
-
                     })
                 } catch (_) {
                     // Silencioso
@@ -276,7 +275,7 @@ httpClient.interceptors.response.use(
             }
 
             try {
-                toast(userMessage, {
+                useNotification(userMessage, {
                     "theme": "colored",
                     "type": "error",
                     "hideProgressBar": true,
@@ -292,7 +291,7 @@ httpClient.interceptors.response.use(
 
         // 7.3. Otros errores (por ejemplo, 500 en servidor)
         try {
-            toast(ERROR_MESSAGES.errorProcesar, {
+            useNotification(ERROR_MESSAGES.errorProcesar, {
                 "theme": "colored",
                 "type": "error",
                 "hideProgressBar": true,

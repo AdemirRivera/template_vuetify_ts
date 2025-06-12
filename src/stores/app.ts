@@ -6,6 +6,7 @@ interface State {
   userInfo: Partial<User>,
   menuRoutes: Route[],
   pathRoutes: Route[],
+  showSidebar: boolean
 }
 
 const filterMenu = (routes_params: Route[]): Route[] => {
@@ -25,6 +26,7 @@ export const useAppStore = defineStore('app', {
     userInfo: {},
     menuRoutes: [],
     pathRoutes: [],
+    showSidebar: false
   }),
 
   actions: {
@@ -59,6 +61,7 @@ export const useAppStore = defineStore('app', {
       this.userInfo = {}
       this.menuRoutes = []
       this.pathRoutes = []
+      this.showSidebar = false
     }
   }
 })

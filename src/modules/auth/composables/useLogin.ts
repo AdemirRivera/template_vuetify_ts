@@ -8,7 +8,7 @@ type LoginForm = InferType<typeof opinionesSchema>;
 
 export default function useLogin(): UseLoginReturn {
     const Store = useAppStore()
-    const router = useRouter()
+    const Router = useRouter()
     const showPass = ref<boolean>(false)
 
     const { handleSubmit } = useForm<LoginForm>({
@@ -25,7 +25,7 @@ export default function useLogin(): UseLoginReturn {
     const toFirstRoute = async () => {
         await Store.fetchRoutes()
         const route = Store.menuRoutes[0]
-        router.push({ name: route.nombreUri })
+        Router.push({ name: route.nombreUri })
     }
 
     const loginMutation = useMutation({
