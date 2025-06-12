@@ -8,6 +8,16 @@ interface State {
   pathRoutes: Route[],
 }
 
+const filterMenu = (routes_params: Route[]): Route[] => {
+  return routes_params.filter((route: Route) => {
+    if (!route.mostrar) return false
+    if (route.childs) {
+      if (route.childs.length > 0) route.childs = filterMenu(route.childs)
+      return true
+    }
+  })
+}
+
 export const useAppStore = defineStore('app', {
   state: (): State => ({
     showLoader: false,
@@ -31,15 +41,6 @@ export const useAppStore = defineStore('app', {
     },
 
     async fetchRoutes() {
-
-      const filterMenu = (routes: Route[]): Route[] =>
-        routes
-          .filter(route => route.mostrar === 1)
-          .map(route => ({
-            ...route,
-            childs: filterMenu(route.childs)
-          }));
-
       try {
         const { data, status } = await appServices.getAuthorizedPaths()
 

@@ -1,6 +1,6 @@
 import { useAppStore } from "@/stores/app";
 import { type RouteLocationNormalized } from "vue-router";
-import type { Route } from "@/stores/store.interfaces";
+import type { Route } from "@/interfaces/general.interface";
 
 const Store = useAppStore()
 
@@ -28,7 +28,7 @@ export default async (route: RouteLocationNormalized) => {
 
     if (Store.pathRoutes.length === 0) await Store.fetchRoutes()
 
-    if (Store.userInfo) await Store.fetchUserInfo()
+    if (!Store.userInfo?.nombre) await Store.fetchUserInfo()
 
     return searchPath(Store.pathRoutes, route)
 }

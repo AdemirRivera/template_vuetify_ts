@@ -2,10 +2,13 @@ import { opinionesSchema } from "../login.schema"
 import authServices from "../auth.services";
 import type { InferType } from 'yup';
 import type { UseLoginReturn } from "../auth.interfaces";
+import { useAppStore } from "@/stores/app";
 
 type LoginForm = InferType<typeof opinionesSchema>;
 
 export default function useLogin(): UseLoginReturn {
+    const Store = useAppStore()
+    const router = useRouter()
     const showPass = ref<boolean>(false)
 
     const { handleSubmit } = useForm<LoginForm>({
@@ -19,6 +22,12 @@ export default function useLogin(): UseLoginReturn {
         loginMutation.mutate({ email: values.email, password: values.pass })
     })
 
+    const toFirstRoute = async () => {
+        await Store.fetchRoutes()
+        const route = Store.menuRoutes[0]
+        router.push({ name: route.nombreUri })
+    }
+
     const loginMutation = useMutation({
         mutationFn: authServices.login,
         onSuccess: (resp) => {
@@ -26,6 +35,8 @@ export default function useLogin(): UseLoginReturn {
 
             localStorage.setItem('token', token)
             localStorage.setItem('refresh_token', refresh_token)
+
+            toFirstRoute()
         }
     })
 
