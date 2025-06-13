@@ -40,6 +40,10 @@ export default function useLogin(): UseLoginReturn {
         }
     })
 
+    onMounted(() => {
+        Store.$reset()
+    })
+
     return {
         email,
         pass,
