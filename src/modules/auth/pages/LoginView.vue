@@ -49,7 +49,7 @@
         height="40"
         type="submit"
         text="Iniciar sesión"
-        class="text-none"
+        class="text-no-style"
       />
     </div>
 

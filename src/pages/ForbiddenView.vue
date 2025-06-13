@@ -7,14 +7,14 @@
     <template v-slot:actions>
       <v-btn
         v-if="hasToken"
-        class="text-none"
+        class="text-no-style"
         rounded="lg"
         text="Regresar"
         @click="$router.go(-1)"
       />
 
       <v-btn
-        class="text-none"
+        class="text-no-style"
         rounded="lg"
         text="Ir al Login"
         @click="$router.push({ name: 'login' })"

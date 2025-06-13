@@ -8,3 +8,11 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+.text-no-style {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 600;
+  line-height: 25px;
+  font-size: 0.80rem;
+}

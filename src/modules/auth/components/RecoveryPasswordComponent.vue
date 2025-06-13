@@ -32,7 +32,7 @@
             class="mt-6 d-flex flex-column flex-sm-row ga-4 ga-sm-8 justify-center"
           >
             <v-btn
-              class="text-none"
+              class="text-no-style"
               color="primary"
               variant="outlined"
               @click="isActive.value = false"
@@ -40,7 +40,7 @@
               <span> Cancelar </span>
             </v-btn>
             <v-btn
-              class="text-none"
+              class="text-no-style"
               color="primary"
               type="submit"
             >

@@ -16,7 +16,7 @@
         <div class="mt-6 d-flex flex-column flex-sm-row justify-center ga-4">
           <v-btn
             v-show="showCancel"
-            class="button-extra"
+            class="text-no-style"
             color="primary"
             height="40"
             variant="outlined"
@@ -25,7 +25,7 @@
             <span> {{ cancelMessage }} </span>
           </v-btn>
           <v-btn
-            class="button-extra"
+            class="text-no-style"
             color="primary"
             height="40"
             @click="emit('accept')"

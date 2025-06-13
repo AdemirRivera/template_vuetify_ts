@@ -95,13 +95,15 @@
       </v-list>
     </template>
 
-    <!-- <ModalConfirmationComponent
-    v-model="showModalConf"
-    icon-type
-    icon="mdi-check-circle-outline"
-    subtitle="Correo enviado con éxito para restablecer tu contraseña."
-    @accept="showModalConf = false"
-  /> -->
+    <ModalConfirmationComponent
+      v-model="showModalConf"
+      icon-type
+      icon="mdi-information-outline"
+      subtitle="¿Estás seguro de que deseas cerrar sesión?"
+      show-cancel
+      @accept="logoutMutation.mutate()"
+      @cancel="showModalConf = false"
+    />
   </v-navigation-drawer>
 </template>
 
@@ -178,8 +180,6 @@ const toggleSideBar = () => {
 }
 
 const handleAction = (idOption: number) => {
-  if (idOption == 3) logoutMutation.mutate()
+  if (idOption == 3) showModalConf.value = true
 }
 </script>
-
-<style scoped></style>
