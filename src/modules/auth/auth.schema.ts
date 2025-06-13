@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const opinionesSchema = yup.object({
+export const loginSchema = yup.object({
     email: yup
         .string()
         .email('El correo electrónico no es válido')

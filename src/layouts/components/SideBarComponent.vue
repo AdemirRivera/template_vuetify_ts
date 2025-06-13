@@ -94,6 +94,14 @@
         </template>
       </v-list>
     </template>
+
+    <!-- <ModalConfirmationComponent
+    v-model="showModalConf"
+    icon-type
+    icon="mdi-check-circle-outline"
+    subtitle="Correo enviado con éxito para restablecer tu contraseña."
+    @accept="showModalConf = false"
+  /> -->
   </v-navigation-drawer>
 </template>
 
@@ -112,6 +120,8 @@ interface ListOption {
   icon: string
   hide?: boolean
 }
+
+const showModalConf = ref<boolean>(false)
 
 const listOptions: ListOption[] = [
   //   {
