@@ -13,9 +13,11 @@ const filterMenu = (routes_params: Route[]): Route[] => {
   return routes_params.filter((route: Route) => {
     if (!route.mostrar) return false
     if (route.childs) {
-      if (route.childs.length > 0) route.childs = filterMenu(route.childs)
-      return true
+      if (route.childs.length > 0) {
+        route.childs = filterMenu(route.childs)
+      }
     }
+    return true
   })
 }
 
@@ -48,7 +50,7 @@ export const useAppStore = defineStore('app', {
 
         if (status === 200) {
           this.pathRoutes = JSON.parse(JSON.stringify(data))
-          this.menuRoutes = filterMenu(data)
+          this.menuRoutes = filterMenu(JSON.parse(JSON.stringify(data)))
         }
       } catch (error) {
         console.error(error)

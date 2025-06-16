@@ -46,6 +46,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../pages/TestView.vue'),
         meta: { title: 'Test' }
       },
+      {
+        path: '/list-instituciones',
+        name: 'listInstituciones',
+        component: () => import('../pages/TestView.vue'),
+        meta: { title: 'Test' }
+      },
     ]
   },
   {
@@ -56,7 +62,8 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/:pathMatch(.*)*",
+    // path: "/:pathMatch(.*)*",
+    path: "/forbidden",
     name: "forbidden",
     component: () => import("../pages/ForbiddenView.vue"),
     meta: { requiresAuth: false, title: "Forbidden" },
@@ -89,7 +96,6 @@ router.beforeEach(async (to, from, next) => {
         next({ name: 'login' })
         return
       }
-
       const authorized = await canNext(to)
       if (authorized) {
         next()
