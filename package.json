@@ -2,7 +2,7 @@
   "name": "template_vue_3",
   "private": true,
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "scripts": {
     "dev": "vite",
     "build": "npm run type-check && npm run build-only",
