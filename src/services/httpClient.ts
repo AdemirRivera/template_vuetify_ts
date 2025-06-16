@@ -4,7 +4,16 @@ import axios, {
     type AxiosInstance,
     type AxiosRequestConfig,
     type AxiosResponse,
+    type InternalAxiosRequestConfig,
 } from "axios";
+
+declare module 'axios' {
+    interface AxiosRequestConfig {
+        disableLoader?: boolean
+    }
+}
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig { disableLoader?: boolean }
 
 // --- 1. Tipos específicos para la respuesta de refresh ---
 interface RefreshResponse {
@@ -54,6 +63,7 @@ const axiosConfig: AxiosRequestConfig = {
         Accept: "application/json",
         Authorization: `Bearer ${getLocalStorageItem("token") || ""}`,
     },
+    disableLoader: false,
 };
 
 const httpClient: AxiosInstance = axios.create(axiosConfig);
@@ -129,13 +139,17 @@ function getFreshToken(): Promise<string> {
 }
 
 // --- 6. Interceptor de peticiones (Request) ---
-httpClient.interceptors.request.use(
-    (config) => {
-        const Store = useAppStore()
+let pendingRequests = 0
 
+httpClient.interceptors.request.use(
+    (config: CustomAxiosRequestConfig) => {
+        const Store = useAppStore()
         // Mostrar loader si no se desactiva explícitamente
-        if (!config.headers?.["disableLoader"]) {
-            Store.showLoader = true;
+        if (!config.disableLoader) {
+            pendingRequests += 1                    // ARRANCA una petición pendiente
+            if (pendingRequests === 1) {
+                Store.showLoader = true               // Solo showLoader en la primera
+            }
         }
 
         // VALIDAR FormData: si se envía un FormData, quitamos el Content-Type
@@ -159,12 +173,7 @@ httpClient.interceptors.request.use(
     },
     (error) => {
         const Store = useAppStore()
-        // En caso de error en request, ocultar loader si corresponde
-        try {
-            Store.showLoader = false;
-        } catch (_) {
-            // Silencioso si el store no existe aún
-        }
+        Store.showLoader = false;
         return Promise.reject(error);
     }
 );
@@ -173,21 +182,31 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
     (response) => {
         const Store = useAppStore()
-        // Ocultar loader
-        try {
-            Store.showLoader = false
-        } catch (_) {
-            // Silencioso
+        Store.showLoader = false
+
+        const config = response.config as CustomAxiosRequestConfig
+
+        if (!config.disableLoader) {
+            pendingRequests = Math.max(pendingRequests - 1, 0)  // TERMINA una petición
+            if (pendingRequests === 0) {
+                Store.showLoader = false                          // Sólo hideLoader al último
+            }
         }
+
         return response;
     },
     async (error) => {
-        // Ocultar loader
-        try {
-            const Store = useAppStore()
+        const Store = useAppStore()
+        // En error también restamos
+        const config = error.config as CustomAxiosRequestConfig
+        if (config && !config.disableLoader) {
+            pendingRequests = Math.max(pendingRequests - 1, 0)
+            if (pendingRequests === 0) {
+                Store.showLoader = false
+            }
+        } else {
+            // caso en que error.config no exista
             Store.showLoader = false
-        } catch (_) {
-            // Silencioso
         }
 
         // Si no hay conectividad (status 0 o sin respuesta), notificamos
