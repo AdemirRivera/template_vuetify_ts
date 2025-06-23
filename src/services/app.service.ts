@@ -4,15 +4,15 @@ import type { User, Route } from "@/interfaces/general.interface";
 interface LogoutResp { message: string }
 
 const logout = async () => {
-    return await httpClient.post<LogoutResp>('/api/v1/logout')
+    return await httpClient.post<LogoutResp>('/api/v1/auth/logout')
 }
 
 const verify = async () => {
-    return await httpClient.get<User>('/api/v1/verify-user')
+    return await httpClient.get<User>('/api/v1/auth/verify-user')
 }
 
 const getAuthorizedPaths = async () => {
-    return await httpClient.get<Route[]>('/api/v1/get-rutas')
+    return await httpClient.get<Route[]>('/api/v1/auth/get-rutas')
 }
 
 export default {

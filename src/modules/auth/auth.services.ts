@@ -9,7 +9,7 @@ const login = async (params: LoginParams): Promise<LoginResponse> => {
     const effectiveType: string | undefined = nav?.effectiveType;
     const start = performance.now();
 
-    const response = await httpClient.post<LoginResponse>("/api/v1/login", params); // API
+    const response = await httpClient.post<LoginResponse>("/api/v1/auth/login", params); // API
 
     const duration = performance.now() - start;
     const isBadNetwork =

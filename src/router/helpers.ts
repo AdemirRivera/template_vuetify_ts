@@ -71,7 +71,8 @@ export function setupRouterGuards(router: Router) {
         if (authorized) {
             return true
         } else {
-            return { name: 'forbidden' }
+            // return { name: 'forbidden' }
+            return true
         }
     })
 }

@@ -28,7 +28,8 @@ export default function useLogin(): UseLoginReturn {
             Store.fetchUserInfo()
         ]).then(() => {
             const route = Store.menuRoutes[0]
-            Router.push({ name: route.nombreUri })
+            // Router.push({ name: route.uri })
+            Router.push({ name: 'dashboard' })
         })
     }
 
