@@ -37,7 +37,7 @@ export const useAppStore = defineStore('app', {
         const { data, status } = await appServices.verify()
 
         if (status === 200) {
-          this.userInfo = data
+          this.userInfo = data.data.user
         }
       } catch (error) {
         console.error(error)

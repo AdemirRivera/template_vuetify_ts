@@ -1,8 +1,7 @@
 export interface User {
-    nombre:   string;
-    rol:      string;
-    permisos: string[];
-    temp_pwd: boolean;
+    name: string;
+    roles: string;
+    permissions: string[];
 }
 
 export interface Route {
