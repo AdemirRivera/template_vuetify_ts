@@ -50,6 +50,7 @@
         type="submit"
         text="Iniciar sesión"
         class="text-no-style"
+        :loading="loadButton"
       />
     </div>
 
@@ -68,6 +69,7 @@ const {
   email,
   pass,
   showPass,
+  loadButton,
 
   loginUser
 } = useLogin()

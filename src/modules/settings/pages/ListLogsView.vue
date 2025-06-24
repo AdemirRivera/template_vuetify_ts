@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import settingsServices from '@/modules/settings/settings.services'
+import settingsServices from '../settings.services'
 
 const headers = [
   { title: 'Descripción', key: 'description', sortable: false },
@@ -42,7 +42,6 @@ const logsQuery = useQuery({
     settingsServices.getListLogs({
       page: paramsLogs.page,
       per_page: paramsLogs.perPage
-    }),
-  staleTime: 1000 * 60 * 60
+    })
 })
 </script>

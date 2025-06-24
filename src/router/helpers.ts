@@ -38,7 +38,7 @@ const canNext = async (route: RouteLocationNormalized): Promise<boolean> => {
 
     if (!route.name) return false
     if (Store.pathRoutes.length === 0) await Store.fetchRoutes()
-    if (!Store.userInfo?.nombre) await Store.fetchUserInfo()
+    if (!Store.userInfo?.name) await Store.fetchUserInfo()
 
     return searchPath(Store.pathRoutes, route)
 }
@@ -71,7 +71,7 @@ export function setupRouterGuards(router: Router) {
         if (authorized) {
             return true
         } else {
-            // return { name: 'forbidden' }
+            // return { name: 'forbidden' } // desactivado si no hay verificacion de rutas
             return true
         }
     })

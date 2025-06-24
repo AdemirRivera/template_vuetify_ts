@@ -22,10 +22,12 @@ export default function useLogin(): UseLoginReturn {
         loginMutation.mutate({ email: values.email, password: values.pass })
     })
 
+    const loadButton = computed(() => loginMutation.isPending.value || false)
+
     const toFirstRoute = () => {
         Promise.all([
             Store.fetchRoutes(),
-            Store.fetchUserInfo()
+            // Store.fetchUserInfo() // verificar usuario
         ]).then(() => {
             const route = Store.menuRoutes[0]
             // Router.push({ name: route.uri })
@@ -36,10 +38,11 @@ export default function useLogin(): UseLoginReturn {
     const loginMutation = useMutation({
         mutationFn: authServices.login,
         onSuccess: (resp) => {
-            const { token, refresh_token } = resp
+            const { token, refresh_token, user } = resp
 
             localStorage.setItem('token', token)
             localStorage.setItem('refresh_token', refresh_token)
+            Store.userInfo = user
 
             toFirstRoute()
         }
@@ -53,6 +56,7 @@ export default function useLogin(): UseLoginReturn {
         email,
         pass,
         showPass,
+        loadButton,
 
         loginUser
     }

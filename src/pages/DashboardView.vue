@@ -2,47 +2,51 @@
   <v-container fluid>
     <!-- title -->
     <div class="d-flex justify-center justify-md-start">
-      <span class="text-h4 text-sm-h3 text-primary"> Logs </span>
+      <span class="text-h4 text-sm-h3 text-primary"> Permisos </span>
     </div>
 
     <!-- table -->
     <v-data-table-server
-      ref="table"
-      v-model:items-per-page="paramsLogs.perPage"
       :headers="headers"
-      :items="logsQuery.data.value?.data || []"
-      :items-length="paramsLogs.total"
-    >
-    </v-data-table-server>
+      :items="permissionsQuery.data.value?.data || []"
+      :items-per-page="paramsPermissions.perPage"
+      :page="paramsPermissions.page"
+      :items-length="totalItems"
+      :loading="permissionsQuery.isLoading.value"
+      @update:options="onPaginate"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
+import type { DataTableServerOptions } from '@/interfaces/vuetify.interfaces'
 import settingsServices from '@/modules/settings/settings.services'
 
 const headers = [
-  { title: 'Descripción', key: 'description', sortable: false },
-  { title: 'Fecha', key: 'date', sortable: false }
+  { title: 'Nombre', key: 'name', sortable: false },
+  { title: 'Descripción', key: 'description', sortable: false }
 ]
 
-const paramsLogs = reactive({
+const paramsPermissions = reactive({
   page: 1,
-  perPage: 10,
-  total: 0
+  perPage: 10
 })
 
-const queryKey = computed(() => [
-  'list_logs',
-  { page: paramsLogs.page, per_page: paramsLogs.perPage }
-])
+const totalItems = computed(
+  () => permissionsQuery.data.value?.pagination.total || 0
+)
 
-const logsQuery = useQuery({
-  queryKey,
+const permissionsQuery = useQuery({
+  queryKey: ['list_permissions', paramsPermissions],
   queryFn: () =>
-    settingsServices.getListLogs({
-      page: paramsLogs.page,
-      per_page: paramsLogs.perPage
-    }),
-  staleTime: 1000 * 60 * 60
+    settingsServices.getListPermissions({
+      page: paramsPermissions.page,
+      per_page: paramsPermissions.perPage
+    })
 })
+
+const onPaginate = (params: DataTableServerOptions) => {
+  paramsPermissions.page = params.page
+  paramsPermissions.perPage = params.itemsPerPage
+}
 </script>
