@@ -1,4 +1,4 @@
-// src/services/auth.service.ts
+// src/auth.services.ts
 import httpClient from "@/services/httpClient";
 import type { LoginParams, LoginResponse } from "./auth.interfaces";
 
