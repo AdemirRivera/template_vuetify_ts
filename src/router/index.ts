@@ -15,6 +15,7 @@ declare module 'vue-router' {
 }
 
 import authRoutes from '../modules/auth/router'
+import settingRoutes from '../modules/settings/router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -27,18 +28,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../pages/DashboardView.vue'),
         meta: { title: 'Dashboard' }
       },
-      {
-        path: '/list-firmas',
-        name: 'listFirmas',
-        component: () => import('../pages/TestView.vue'),
-        meta: { title: 'Test' }
-      },
-      {
-        path: '/list-instituciones',
-        name: 'listInstituciones',
-        component: () => import('../pages/TestView.vue'),
-        meta: { title: 'Test' }
-      },
+      ...settingRoutes,
     ]
   },
   {

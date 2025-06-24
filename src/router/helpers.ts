@@ -71,7 +71,7 @@ export function setupRouterGuards(router: Router) {
         if (authorized) {
             return true
         } else {
-            // return { name: 'forbidden' }
+            // return { name: 'forbidden' } // desactivado si no hay verificacion de rutas
             return true
         }
     })
