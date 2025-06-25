@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <side-bar-component />
+    <app-bar-component />
 
     <v-main class="d-flex justify-center">
       <div class="w-100 px-0 px-lg-0 w-lg-66 px-sm-12">
@@ -11,5 +11,5 @@
 </template>
 
 <script lang="ts" setup>
-import SideBarComponent from './components/SideBarComponent.vue'
+import AppBarComponent from './components/AppBarComponent.vue'
 </script>

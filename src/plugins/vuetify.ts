@@ -78,6 +78,9 @@ export default createVuetify({
         rounded: "t-lg",
         hideSlider: true,
       }
+    },
+    VDataTableServer: {
+      mobileBreakpoint: 'sm',
     }
   }
 })

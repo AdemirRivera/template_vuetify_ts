@@ -1,9 +1,7 @@
 <template>
   <v-container fluid>
     <!-- title -->
-    <div class="d-flex justify-center justify-md-start">
-      <span class="text-h4 text-sm-h3 text-primary"> Permisos </span>
-    </div>
+    <title-component title="Permisos" />
 
     <!-- table -->
     <v-data-table-server

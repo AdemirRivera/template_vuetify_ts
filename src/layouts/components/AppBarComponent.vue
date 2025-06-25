@@ -21,7 +21,12 @@
         <!-- Menú que solo se activa con los tres puntos -->
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn icon="mdi-dots-vertical" v-bind="props" variant="text" class="ml-2" />
+            <v-btn
+              icon="mdi-dots-vertical"
+              v-bind="props"
+              variant="text"
+              class="ml-2"
+            />
           </template>
 
           <v-list base-color="text" :disabled="false">
@@ -115,8 +120,7 @@
       </template>
     </v-list>
 
-    <!-- v-if="!Store.showSidebar || mobile" -->
-    <template v-slot:append>
+    <template v-slot:append v-if="smAndUp">
       <v-list
         base-color="text"
         :disabled="false"
@@ -158,7 +162,7 @@ import type { Route } from '@/interfaces/general.interface'
 
 const Store = useAppStore()
 const Router = useRouter()
-const { mobile, width } = useDisplay()
+const { mobile, width, smAndUp } = useDisplay()
 
 interface ListOption {
   id: number
@@ -218,7 +222,7 @@ const toggleSideBar = () => {
 }
 
 const handleAction = (idOption: number) => {
-  if (idOption == 3) showModalConf.value = true
+  if (idOption == 2) showModalConf.value = true
 }
 </script>
 <style scoped lang="scss">
