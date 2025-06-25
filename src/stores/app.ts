@@ -1,5 +1,6 @@
 import appServices from "@/services/app.service"
 import type { User, Route } from "@/interfaces/general.interface"
+import mock_routes from "./mock_routes.json"
 
 interface State {
   showLoader: boolean,
@@ -46,7 +47,9 @@ export const useAppStore = defineStore('app', {
 
     async fetchRoutes() {
       try {
-        const { data, status } = await appServices.getAuthorizedPaths()
+        // const { data, status } = await appServices.getAuthorizedPaths()
+        const status = 200
+        const data = mock_routes
 
         if (status === 200) {
           this.pathRoutes = JSON.parse(JSON.stringify(data))

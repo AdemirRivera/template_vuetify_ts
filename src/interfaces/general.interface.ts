@@ -12,7 +12,7 @@ export interface Route {
     mostrar: number;
     orden: number | null;
     ruta_padre_id: number | null;
-    nombreUri: string;
+    nombre_uri: string;
     created_at: null;
     updated_at: null;
     childs: Route[];

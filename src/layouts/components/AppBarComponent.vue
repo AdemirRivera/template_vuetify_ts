@@ -3,23 +3,22 @@
     <v-app-bar-nav-icon @click="Store.showSidebar = !Store.showSidebar" />
     <template v-slot:append>
       <div class="d-flex align-center">
-        <!-- Área de información del usuario (no clickeable para menú) -->
-        <div class="d-flex align-center">
-          <div>
-            <h4>{{ Store.userInfo.name }}</h4>
-            <p class="text-grey-lighten-1">
-              {{ Store.userInfo.roles }}
-            </p>
-          </div>
-          <!-- Avatar (opcional, descomenta si lo necesitas) -->
-          <!-- <v-avatar @click="goToProfile">
-            <v-img alt="User Avatar"
-              :src="`https://ui-avatars.com/api/?name=${auth_store_ref?.user_info_st?.user?.name}`" />
-          </v-avatar> -->
+        <!-- <div class="d-flex align-center"> -->
+        <div class="d-flex flex-row mr-2">
+          <span class="font-weight-medium" v-text="Store.userInfo.name" />
+          <v-divider class="mx-3" vertical />
+          <span class="text-grey-lighten-1" v-text="Store.userInfo.roles" />
         </div>
+        <!-- <v-avatar>
+            <v-img
+              alt="User Avatar"
+              :src="`https://ui-avatars.com/api/?name=${}`"
+            />
+          </v-avatar> -->
+        <!-- </div> -->
 
         <!-- Menú que solo se activa con los tres puntos -->
-        <v-menu>
+        <!-- <v-menu>
           <template v-slot:activator="{ props }">
             <v-btn
               icon="mdi-dots-vertical"
@@ -45,7 +44,7 @@
               </v-list-item>
             </template>
           </v-list>
-        </v-menu>
+        </v-menu> -->
       </div>
     </template>
   </v-app-bar>
@@ -57,17 +56,11 @@
     :rail-width="railWidth"
     disable-route-watcher
     :mobile="mobile" -->
-    <div class="d-flex justify-start pa-4">
-      <!-- :icon="mobile ? 'mdi-close' : 'mdi-menu'" -->
-      <v-app-bar-nav-icon icon="close" @click="toggleSideBar" />
-    </div>
+    <!-- <div class="d-flex justify-start pa-4">
+      <v-app-bar-nav-icon :icon="mobile ? 'mdi-close' : 'mdi-menu'" @click="toggleSideBar" />
+    </div> -->
 
-    <v-list
-      dense
-      nav
-      class="pt-3 px-4 d-flex flex-column ga-2"
-      v-if="!Store.showSidebar || mobile"
-    >
+    <v-list dense nav class="px-4 d-flex flex-column ga-2">
       <template v-for="primary in Store.menuRoutes" :key="primary.id">
         <v-list-group
           color="primary"
@@ -119,9 +112,18 @@
         </v-list-item>
       </template>
     </v-list>
-
     <template v-slot:append v-if="smAndUp">
-      <v-list
+      <v-list dense nav class="px-4 d-flex flex-column ga-2">
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Cerrar sesión"
+          base-color="primary"
+          @click="showModalConf = true"
+          class="title"
+          color="primary"
+        />
+      </v-list>
+      <!-- <v-list
         base-color="text"
         :disabled="false"
         class="mb-4 d-flex flex-column ga-2 px-4"
@@ -140,7 +142,7 @@
             </template>
           </v-list-item>
         </template>
-      </v-list>
+      </v-list> -->
     </template>
 
     <ModalConfirmationComponent
@@ -162,29 +164,29 @@ import type { Route } from '@/interfaces/general.interface'
 
 const Store = useAppStore()
 const Router = useRouter()
-const { mobile, width, smAndUp } = useDisplay()
+const { smAndUp } = useDisplay()
 
-interface ListOption {
-  id: number
-  title: string
-  icon: string
-  hide?: boolean
-}
+// interface ListOption {
+//   id: number
+//   title: string
+//   icon: string
+//   hide?: boolean
+// }
 
 const showModalConf = ref<boolean>(false)
 
-const listOptions: ListOption[] = [
-  {
-    id: 1,
-    title: 'Mi cuenta',
-    icon: 'mdi-account-circle'
-  },
-  {
-    id: 2,
-    title: 'Cerrar sesión',
-    icon: 'mdi-logout'
-  }
-]
+// const listOptions: ListOption[] = [
+//   {
+//     id: 1,
+//     title: 'Mi cuenta',
+//     icon: 'mdi-account-circle'
+//   },
+//   {
+//     id: 2,
+//     title: 'Cerrar sesión',
+//     icon: 'mdi-logout'
+//   }
+// ]
 
 // const railWidth = computed<number>(() => {
 //   if (mobile.value) return width.value - 45
@@ -214,16 +216,16 @@ const logoutMutation = useMutation({
 
 const redirectSiderBar = (item: Route) => {
   Store.showSidebar = !Store.showSidebar
-  Router.push({ name: item.nombreUri })
+  Router.push({ name: item.nombre_uri })
 }
 
-const toggleSideBar = () => {
-  Store.showSidebar = !Store.showSidebar
-}
+// const toggleSideBar = () => {
+//   Store.showSidebar = !Store.showSidebar
+// }
 
-const handleAction = (idOption: number) => {
-  if (idOption == 2) showModalConf.value = true
-}
+// const handleAction = (idOption: number) => {
+//   if (idOption == 2) showModalConf.value = true
+// }
 </script>
 <style scoped lang="scss">
 :deep(.v-list-item .v-icon) {
