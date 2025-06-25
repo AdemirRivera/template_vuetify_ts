@@ -17,10 +17,13 @@
 </template>
 
 <script setup lang="ts">
-import type { DataTableServerOptions } from '@/interfaces/vuetify.interfaces'
+import type {
+  DataTableServerOptions,
+  DataTableColumn
+} from '@/interfaces/vuetify.interfaces'
 import settingsServices from '@/modules/settings/settings.services'
 
-const headers = [
+const headers: DataTableColumn[] = [
   { title: 'Nombre', key: 'name', sortable: false },
   { title: 'Descripción', key: 'description', sortable: false }
 ]

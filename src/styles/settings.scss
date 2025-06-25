@@ -46,6 +46,11 @@
 .v-data-table__thead {
   color: #fff;
   background-color: #1c1e4d;
+
+  .v-icon,
+  .v-data-table-header__content {
+    color: #fff;
+  }
 }
 
 .v-data-table-footer {
