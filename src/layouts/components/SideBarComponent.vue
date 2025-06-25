@@ -1,20 +1,60 @@
 <template>
-  <v-navigation-drawer
-    style="border-top-right-radius: 25px"
-    v-model="drawer"
-    rail
-    temporary
+  <v-app-bar scroll-behavior="hide" :elevation="0" color="primary">
+    <v-app-bar-nav-icon @click="Store.showSidebar = !Store.showSidebar" />
+    <template v-slot:append>
+      <div class="d-flex align-center">
+        <!-- Área de información del usuario (no clickeable para menú) -->
+        <div class="d-flex align-center">
+          <div>
+            <h4>{{ Store.userInfo.name }}</h4>
+            <p class="text-grey-lighten-1">
+              {{ Store.userInfo.roles }}
+            </p>
+          </div>
+          <!-- Avatar (opcional, descomenta si lo necesitas) -->
+          <!-- <v-avatar @click="goToProfile">
+            <v-img alt="User Avatar"
+              :src="`https://ui-avatars.com/api/?name=${auth_store_ref?.user_info_st?.user?.name}`" />
+          </v-avatar> -->
+        </div>
+
+        <!-- Menú que solo se activa con los tres puntos -->
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn icon="mdi-dots-vertical" v-bind="props" variant="text" class="ml-2" />
+          </template>
+
+          <v-list base-color="text" :disabled="false">
+            <template v-for="(item, i) in listOptions" :key="i">
+              <v-list-item
+                :value="item"
+                @click="handleAction(item.id)"
+                v-if="!item.hide"
+              >
+                <v-list-item-title class="text-primary">
+                  {{ item.title }}
+                </v-list-item-title>
+                <template #prepend>
+                  <v-icon color="primary">{{ item.icon }}</v-icon>
+                </template>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+      </div>
+    </template>
+  </v-app-bar>
+
+  <v-navigation-drawer v-model="Store.showSidebar" temporary>
+    <!-- rail
     :elevation="1"
     :scrim="false"
     :rail-width="railWidth"
     disable-route-watcher
-    :mobile="mobile"
-  >
-    <div class="d-flex justify-end pa-4">
-      <v-app-bar-nav-icon
-        :icon="mobile ? 'mdi-close' : 'mdi-menu'"
-        @click="toggleSideBar"
-      />
+    :mobile="mobile" -->
+    <div class="d-flex justify-start pa-4">
+      <!-- :icon="mobile ? 'mdi-close' : 'mdi-menu'" -->
+      <v-app-bar-nav-icon icon="close" @click="toggleSideBar" />
     </div>
 
     <v-list
@@ -75,7 +115,8 @@
       </template>
     </v-list>
 
-    <template v-slot:append v-if="!Store.showSidebar || mobile">
+    <!-- v-if="!Store.showSidebar || mobile" -->
+    <template v-slot:append>
       <v-list
         base-color="text"
         :disabled="false"
@@ -83,14 +124,17 @@
       >
         <template v-for="(item, i) in listOptions" :key="i">
           <v-list-item
-            class="item-menu"
-            :prepend-icon="item.icon"
-            :title="item.title"
             :value="item"
             @click="handleAction(item.id)"
-            base-color="text"
             v-if="!item.hide"
-          />
+          >
+            <v-list-item-title class="text-primary">
+              {{ item.title }}
+            </v-list-item-title>
+            <template #prepend>
+              <v-icon color="primary">{{ item.icon }}</v-icon>
+            </template>
+          </v-list-item>
         </template>
       </v-list>
     </template>
@@ -126,32 +170,26 @@ interface ListOption {
 const showModalConf = ref<boolean>(false)
 
 const listOptions: ListOption[] = [
-  //   {
-  //     id: 1,
-  //     title: 'Perfil',
-  //     icon: 'mdi-account',
-  //     hide: true
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Cambiar contraseña',
-  //     icon: 'mdi-lock-outline'
-  //   },
   {
-    id: 3,
+    id: 1,
+    title: 'Mi cuenta',
+    icon: 'mdi-account-circle'
+  },
+  {
+    id: 2,
     title: 'Cerrar sesión',
     icon: 'mdi-logout'
   }
 ]
 
-const railWidth = computed<number>(() => {
-  if (mobile.value) return width.value - 45
-  return Store.showSidebar ? 80 : 300
-})
+// const railWidth = computed<number>(() => {
+//   if (mobile.value) return width.value - 45
+//   return Store.showSidebar ? 80 : 300
+// })
 
-const drawer = computed<boolean>(() => {
-  return mobile.value ? Store.showSidebar : true
-})
+// const drawer = computed<boolean>(() => {
+//   return mobile.value ? Store.showSidebar : true
+// })
 
 const logoutMutation = useMutation({
   mutationFn: appServices.logout,
@@ -183,3 +221,9 @@ const handleAction = (idOption: number) => {
   if (idOption == 3) showModalConf.value = true
 }
 </script>
+<style scoped lang="scss">
+:deep(.v-list-item .v-icon) {
+  opacity: 1 !important;
+  color: rgb(var(--v-theme-primary)) !important;
+}
+</style>
