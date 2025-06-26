@@ -6,7 +6,7 @@
     <!-- table -->
     <v-data-table-server
       :headers="headers"
-      :items="logsQuery.data.value?.data || []"
+      :items="listLogs"
       :items-per-page="paramsLogs.perPage"
       :page="paramsLogs.page"
       :items-length="totalItems"
@@ -34,9 +34,11 @@
 <script setup lang="ts">
 import type {
   DataTableServerOptions,
-  DataTableColumn
+  DataTableColumn,
+  SortItem
 } from '@/interfaces/vuetify.interfaces'
 import settingsServices from '../settings.services'
+import { sortArray } from '@/utils/globalFunctions'
 
 const headers: DataTableColumn[] = [
   { title: 'Código', key: 'error_code', align: 'center', maxWidth: '45' },
@@ -50,7 +52,17 @@ const paramsLogs = reactive({
   perPage: 10
 })
 
+const sortByLogs: SortItem = reactive({
+  key: null,
+  order: null
+})
+
 const totalItems = computed(() => logsQuery.data.value?.pagination.total || 0)
+
+const listLogs = computed(() => {
+  const data = logsQuery.data.value?.data || []
+  return sortArray(sortByLogs, data)
+})
 
 const logsQuery = useQuery({
   queryKey: ['list_logs', paramsLogs],
@@ -61,9 +73,14 @@ const logsQuery = useQuery({
     })
 })
 
-const onPaginate = (params: DataTableServerOptions) => {
-  paramsLogs.page = params.page
-  paramsLogs.perPage = params.itemsPerPage
+const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
+  paramsLogs.page = page
+  paramsLogs.perPage = itemsPerPage
+
+  const { key = null, order = null } = sortBy[0] || {}
+
+  sortByLogs.key = key
+  sortByLogs.order = order
 }
 
 const getCategoryLabel = (code: number): string => {
