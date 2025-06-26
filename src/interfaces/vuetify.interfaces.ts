@@ -22,11 +22,11 @@ export interface DataTableColumn {
 
 
 export interface SortItem {
-  key: string
-  order?: 'asc' | 'desc' | null
+  key: string | null
+  order: 'asc' | 'desc' | null
 }
 
 export interface GroupItem {
-  key: string
+  key: string | null
   order?: 'asc' | 'desc' | null
 }

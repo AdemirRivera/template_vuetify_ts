@@ -6,7 +6,7 @@
     <!-- table -->
     <v-data-table-server
       :headers="headers"
-      :items="permissionsQuery.data.value?.data || []"
+      :items="listPermission"
       :items-per-page="paramsPermissions.perPage"
       :page="paramsPermissions.page"
       :items-length="totalItems"
@@ -19,13 +19,15 @@
 <script setup lang="ts">
 import type {
   DataTableServerOptions,
-  DataTableColumn
+  DataTableColumn,
+  SortItem
 } from '@/interfaces/vuetify.interfaces'
 import settingsServices from '@/modules/settings/settings.services'
+import { sortArray } from '@/utils/globalFunctions'
 
 const headers: DataTableColumn[] = [
-  { title: 'Nombre', key: 'name', sortable: false },
-  { title: 'Descripción', key: 'description', sortable: false }
+  { title: 'Nombre', key: 'name' },
+  { title: 'Descripción', key: 'description' }
 ]
 
 const paramsPermissions = reactive({
@@ -33,9 +35,19 @@ const paramsPermissions = reactive({
   perPage: 10
 })
 
+const sortByPermissions: SortItem = reactive({
+  key: null,
+  order: null
+})
+
 const totalItems = computed(
   () => permissionsQuery.data.value?.pagination.total || 0
 )
+
+const listPermission = computed(() => {
+  const data = permissionsQuery.data.value?.data || []
+  return sortArray(sortByPermissions, data)
+})
 
 const permissionsQuery = useQuery({
   queryKey: ['list_permissions', paramsPermissions],
@@ -46,8 +58,13 @@ const permissionsQuery = useQuery({
     })
 })
 
-const onPaginate = (params: DataTableServerOptions) => {
-  paramsPermissions.page = params.page
-  paramsPermissions.perPage = params.itemsPerPage
+const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
+  paramsPermissions.page = page
+  paramsPermissions.perPage = itemsPerPage
+
+  const { key = null, order = null } = sortBy[0] || {}
+
+  sortByPermissions.key = key
+  sortByPermissions.order = order
 }
 </script>
