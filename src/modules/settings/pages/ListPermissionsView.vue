@@ -40,9 +40,7 @@ const sortByPermissions: SortItem = reactive({
   order: null
 })
 
-const totalItems = computed(
-  () => permissionsQuery.data.value?.pagination.total || 0
-)
+const totalItems = ref(0)
 
 const listPermission = computed(() => {
   const data = permissionsQuery.data.value?.data || []
@@ -57,6 +55,15 @@ const permissionsQuery = useQuery({
       per_page: paramsPermissions.perPage
     })
 })
+
+watch(
+  () => permissionsQuery.data.value?.pagination.total,
+  newTotal => {
+    if (newTotal !== undefined && newTotal !== null) {
+      totalItems.value = newTotal
+    }
+  }
+)
 
 const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
   paramsPermissions.page = page

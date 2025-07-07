@@ -20,6 +20,16 @@ body {
   font-family: 'MuseoSans', sans-serif;
 }
 
+.v-application {
+  [class*='text-'] {
+    color: #36405a;
+    font-family: 'MuseoSans', sans-serif !important;
+  }
+
+  font-family:'MuseoSans',
+  sans-serif !important;
+}
+
 .text-no-style {
   text-transform: none;
   letter-spacing: normal;

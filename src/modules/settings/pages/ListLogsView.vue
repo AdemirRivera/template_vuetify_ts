@@ -57,7 +57,7 @@ const sortByLogs: SortItem = reactive({
   order: null
 })
 
-const totalItems = computed(() => logsQuery.data.value?.pagination.total || 0)
+const totalItems = ref(0)
 
 const listLogs = computed(() => {
   const data = logsQuery.data.value?.data || []
@@ -72,6 +72,15 @@ const logsQuery = useQuery({
       per_page: paramsLogs.perPage
     })
 })
+
+watch(
+  () => logsQuery.data.value?.pagination.total,
+  newTotal => {
+    if (newTotal !== undefined && newTotal !== null) {
+      totalItems.value = newTotal
+    }
+  }
+)
 
 const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
   paramsLogs.page = page

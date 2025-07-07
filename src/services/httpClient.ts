@@ -23,7 +23,7 @@ interface RefreshResponse {
 
 // --- 2. Constantes de Endpoints y Mensajes ---
 const API_BASE_URL = import.meta.env.VITE_VUE_APP_API_URL || "http://127.0.0.1:8000/";
-const REFRESH_ENDPOINT = "/api/v1/refresh";
+const REFRESH_ENDPOINT = "/api/v1/auth/refresh";
 
 const ERROR_MESSAGES = {
     noConexion: "No se pudo establecer conexión con el servidor",
@@ -228,8 +228,8 @@ httpClient.interceptors.response.use(
         const status = error.response?.status;
         const originalConfig = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-        // 7.1. Token expirado o acceso prohibido (status 403)
-        if (status === 403 && !originalConfig._retry) {
+        // 7.1. Token expirado o acceso prohibido (status 401)
+        if (status === 401 && !originalConfig._retry) {
             originalConfig._retry = true;
 
             try {
