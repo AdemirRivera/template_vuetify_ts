@@ -7,6 +7,7 @@
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
+import '@/assets/fonts/MuseoSans.woff'
 
 // Utils
 import { es } from 'vuetify/locale'
@@ -31,6 +32,9 @@ const light = {
     text: '#111928',
     stroke: '#DFE4EA',
     lightBlue: '#5475E5',
+  },
+  variables: {
+    'font-family': 'MuseoSans, sans-serif'
   }
 }
 
@@ -43,6 +47,9 @@ const dark = {
     text: '#111928',
     stroke: '#DFE4EA',
     lightBlue: '#5475E5',
+  },
+  variables: {
+    'font-family': 'MuseoSans, sans-serif'
   }
 }
 

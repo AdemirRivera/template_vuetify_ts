@@ -9,6 +9,17 @@
 //   $color-pack: false
 // );
 
+@font-face {
+  font-family: 'MuseoSans';
+  src: url('@/assets/fonts/MuseoSans.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'MuseoSans', sans-serif;
+}
+
 .text-no-style {
   text-transform: none;
   letter-spacing: normal;
