@@ -17,3 +17,23 @@ export interface Route {
     updated_at: null;
     childs: Route[];
 }
+
+// Estructura de paginación estándar
+export interface Pagination {
+    total: number;
+    per_page: number;
+    current_page: number;
+    last_page: number;
+}
+
+// Parámetros estándar para solicitar paginación
+export interface PaginationParams {
+    page: number;
+    per_page: number;
+}
+
+// Respuesta genérica paginada
+export interface PaginatedResponse<T> {
+    data: T[];
+    pagination: Pagination;
+}
