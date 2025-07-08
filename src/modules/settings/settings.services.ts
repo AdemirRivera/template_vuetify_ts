@@ -1,7 +1,7 @@
 // src/settings.services.ts
 import httpClient from "@/services/httpClient";
 import type { PaginationParams, PaginatedResponse } from "@/interfaces/general.interface";
-import type { DataLogs, DataPermissions, DataRoles } from "./settings.interfaces";
+import type { DataLogs, DataPermissions, DataRoles, DataUsers } from "./settings.interfaces";
 
 const getListLogs = async (params: PaginationParams) => {
     const resp = await httpClient.get<PaginatedResponse<DataLogs>>('/api/v1/log', { params, disableLoader: true });
@@ -18,8 +18,14 @@ const getListRoles = async (params: PaginationParams) => {
     return resp.data;
 };
 
+const getlistUsers = async (params: PaginationParams) => {
+    const resp = await httpClient.get<PaginatedResponse<DataUsers>>('/api/v1/user', { params, disableLoader: true });
+    return resp.data;
+};
+
 export default {
     getListLogs,
     getListPermissions,
-    getListRoles
+    getListRoles,
+    getlistUsers
 };
