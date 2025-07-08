@@ -14,3 +14,10 @@ export interface DataPermissions {
     tag: string
 }
 
+export interface DataRoles {
+    id: string,
+    name: string,
+    activo: string,
+    created_at: string,
+    permissions: string
+}
