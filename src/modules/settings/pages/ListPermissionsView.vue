@@ -1,7 +1,11 @@
 <template>
   <v-container fluid>
     <!-- title -->
-    <title-component title="Permisos" />
+
+    <div class="d-flex align-center justify-space-between">
+      <title-component title="Permisos" />
+      <form-permission-component />
+    </div>
 
     <!-- table -->
     <v-data-table-server
@@ -24,6 +28,8 @@ import type {
 } from '@/interfaces/vuetify.interfaces'
 import settingsServices from '@/modules/settings/settings.services'
 import { sortArray } from '@/utils/globalFunctions'
+
+import FormPermissionComponent from '../components/FormPermissionComponent.vue'
 
 const headers: DataTableColumn[] = [
   { title: 'Nombre', key: 'name' },

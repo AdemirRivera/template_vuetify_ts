@@ -1,4 +1,5 @@
 import { useAppStore } from '../stores/app'
+import { useRouter } from 'vue-router';
 
 import axios, {
     type AxiosInstance,
@@ -17,8 +18,14 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig { disableL
 
 // --- 1. Tipos específicos para la respuesta de refresh ---
 interface RefreshResponse {
-    token: string;
-    refresh_token: string;
+    authorization: {
+        token: {
+            token: string,
+            expires_at: Date
+        }
+        refresh_token: string;
+    },
+    two_factor: boolean
 }
 
 // --- 2. Constantes de Endpoints y Mensajes ---
@@ -77,12 +84,14 @@ let refreshPromise: Promise<string> | null = null;
  * que se resuelve con el nuevo Access Token. Si falla, redirige al login.
  */
 async function refreshAccessToken(): Promise<string> {
+    const Router = useRouter()
+
     const refreshToken = getLocalStorageItem("refresh_token");
     if (!refreshToken) {
         // No existe refresh_token, redirigimos al login inmediatamente
         removeLocalStorageItem("token");
         removeLocalStorageItem("refresh_token");
-        useRouter().push("/login");
+        Router.push({ name: 'login' });
         return Promise.reject(new Error("No hay refresh token disponible"));
     }
 
@@ -95,18 +104,19 @@ async function refreshAccessToken(): Promise<string> {
         );
 
         // Guardamos los nuevos tokens
-        setLocalStorageItem("token", response.data.token);
-        setLocalStorageItem("refresh_token", response.data.refresh_token);
+        setLocalStorageItem("token", response.data.authorization.token.token);
+        setLocalStorageItem("refresh_token", response.data.authorization.refresh_token);
 
         // Actualizamos el header por defecto
-        httpClient.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
+        httpClient.defaults.headers.common.Authorization = `Bearer ${response.data.authorization.token.token}`;
 
-        return response.data.token;
+        return response.data.authorization.token.token;
     } catch (err) {
+        const Router = useRouter()
         // Si falla el refresco, limpiamos y redirigimos
         removeLocalStorageItem("token");
         removeLocalStorageItem("refresh_token");
-        useRouter().push("/login");
+        Router.push({ name: 'login' });
         return Promise.reject(err);
     }
 }
