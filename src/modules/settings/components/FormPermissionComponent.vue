@@ -13,13 +13,13 @@
     <template v-slot:default="{ isActive }">
       <v-card title="Agregar permiso">
         <v-card-text>
-          <form @submit.prevent="">
+          <form @submit.prevent="createPermission">
             <v-row>
               <v-col cols="12" md="6">
                 <v-autocomplete
                   label="Acción *"
                   v-model="action.value.value"
-                  :error-messages="name.errorMessage.value"
+                  :error-messages="action.errorMessage.value"
                   :items="optionActions"
                   item-title="name"
                   return-object
@@ -29,32 +29,59 @@
                 <v-text-field
                   label="Prefijo *"
                   v-model="prefix.value.value"
+                  v-uppercase
                   :error-messages="prefix.errorMessage.value"
                   maxlength="8"
                 />
               </v-col>
               <v-col cols="12">
-                {{ namePrefix }}
                 <v-text-field
+                  class="name-input"
                   label="Nombre *"
                   :prefix="namePrefix || ''"
                   v-model="name.value.value"
+                  v-uppercase
                   maxlength="20"
                   :error-messages="name.errorMessage.value"
                 />
               </v-col>
               <v-col cols="12">
-                <v-textarea label="Descripción *" />
+                <v-textarea
+                  label="Descripción *"
+                  v-model="description.value.value"
+                  maxlength="200"
+                  :error-messages="description.errorMessage.value"
+                  auto-grow
+                  rows="1"
+                />
+              </v-col>
+              <v-col cols="12" md="6" lg="4">
+                <v-text-field
+                  label="Etiqueta *"
+                  v-model="tag.value.value"
+                  v-uppercase
+                  :error-messages="tag.errorMessage.value"
+                  maxlength="8"
+                />
+              </v-col>
+              <v-col cols="12" class="d-flex ga-3 justify-center">
+                <v-btn
+                  color="primary"
+                  text="Guardar"
+                  class="text-no-style"
+                  type="submit"
+                />
+                <v-btn
+                  color="primary"
+                  text="Cancelar"
+                  class="text-no-style"
+                  variant="outlined"
+                  @click=";(isActive.value = false), handleReset()"
+                />
               </v-col>
             </v-row>
           </form>
         </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
-        </v-card-actions>
       </v-card>
     </template>
   </v-dialog>
@@ -87,6 +114,7 @@ const action = useField<ActionOption>('action')
 const prefix = useField<string>('prefix')
 const name = useField<string>('name')
 const description = useField<string>('description')
+const tag = useField<string>('tag')
 
 const namePrefix = computed(() => {
   if (action.value.value?.id) {
@@ -102,3 +130,10 @@ const createPermission = handleSubmit(values => {
   // mutate
 })
 </script>
+<style lang="scss" scoped>
+.name-input {
+  :deep(.v-field__input) {
+    padding-left: 0px !important;
+  }
+}
+</style>

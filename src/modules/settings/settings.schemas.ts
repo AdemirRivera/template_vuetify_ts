@@ -4,10 +4,8 @@ export const permissionSchema = yup.object({
     action: yup
         .object({
             id: yup.number().required(),
-            name: yup.string().required(),
-        })
-        .required("La acción es requerida"),
-
+            name: yup.string().required('La acción es requerida'),
+        }),
     prefix: yup
         .string()
         .when("action.id", {
@@ -18,13 +16,11 @@ export const permissionSchema = yup.object({
                 .min(2, "El mínimo de caracteres es 2"),
             otherwise: (schema) => schema.notRequired()
         }),
-
     name: yup
         .string()
         .required("El nombre es requerido")
-        .matches(/^[A-Z]+$/, "Caracteres no permitidos")
+        .matches(/^[A-Z_]+$/, "Caracteres no permitidos")
         .min(2, "El mínimo de caracteres es 2"),
-
     description: yup
         .string()
         .required("La descripción es requerida")
@@ -33,4 +29,9 @@ export const permissionSchema = yup.object({
             "Caracteres no permitidos"
         )
         .min(10, "El mínimo de caracteres es 10"),
+    tag: yup
+        .string()
+        .required('La etiqueta es requerida')
+        .matches(/^[A-Z]+$/, "Caracteres no permitidos")
+        .min(2, "El mínimo de caracteres es 2"),
 });
