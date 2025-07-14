@@ -22,7 +22,7 @@ import type {
   DataTableColumn,
   SortItem
 } from '@/interfaces/vuetify.interfaces'
-import settingsServices from '@/modules/settings/settings.services'
+import settingsServices from '../services/settings.services'
 import { sortArray } from '@/utils/globalFunctions'
 
 const headers: DataTableColumn[] = [

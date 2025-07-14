@@ -83,7 +83,7 @@ import type {
   DataTableColumn,
   SortItem
 } from '@/interfaces/vuetify.interfaces'
-import settingsServices from '../settings.services'
+import settingsServices from '../services/settings.services'
 import { sortArray } from '@/utils/globalFunctions'
 import { useQuery } from '@tanstack/vue-query'
 

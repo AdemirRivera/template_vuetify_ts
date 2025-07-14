@@ -26,7 +26,7 @@ import type {
   DataTableColumn,
   SortItem
 } from '@/interfaces/vuetify.interfaces'
-import settingsServices from '@/modules/settings/settings.services'
+import settingsServices from '../services/permissions.services'
 import { sortArray } from '@/utils/globalFunctions'
 
 import FormPermissionComponent from '../components/FormPermissionComponent.vue'

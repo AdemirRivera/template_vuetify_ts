@@ -7,13 +7,6 @@ export interface DataLogs {
     created_at: string;
 }
 
-export interface DataPermissions {
-    description: string,
-    id: string,
-    name: string,
-    tag: string
-}
-
 export interface DataRoles {
     id: string;
     name: string;
