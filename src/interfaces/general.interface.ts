@@ -30,7 +30,7 @@ export interface Pagination {
 export interface PaginationParams {
     page: number;
     per_page: number;
-    search?: string | null;
+    name?: string | null;
 }
 
 // Respuesta genérica paginada

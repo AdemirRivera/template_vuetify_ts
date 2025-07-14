@@ -128,7 +128,7 @@ const logsQuery = useQuery({
     settingsServices.getListLogs({
       page: paramsLogs.page,
       per_page: paramsLogs.perPage,
-      search: paramsLogs.search
+      name: paramsLogs.search
     })
 })
 

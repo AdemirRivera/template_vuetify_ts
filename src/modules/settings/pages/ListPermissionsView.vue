@@ -7,6 +7,22 @@
       <form-permission-component />
     </div>
 
+    <v-row>
+      <v-col cols="12" sm="8" md="6">
+        <v-text-field
+          label="Buscar"
+          append-inner-icon="mdi-magnify"
+          placeholder="Por nombre"
+          v-model="searchInput"
+          @input="handleDebouncedInput"
+          maxlength="100"
+          :rules="[minLengthRule]"
+          clearable
+          @click:clear="paramsPermissions.search = null"
+        />
+      </v-col>
+    </v-row>
+
     <!-- table -->
     <v-data-table-server
       :headers="headers"
@@ -16,7 +32,11 @@
       :items-length="totalItems"
       :loading="permissionsQuery.isLoading.value"
       @update:options="onPaginate"
-    />
+    >
+      <template v-slot:item.tag="{ item }">
+        <v-chip :text="item.tag" />
+      </template>
+    </v-data-table-server>
   </v-container>
 </template>
 
@@ -31,14 +51,22 @@ import { sortArray } from '@/utils/globalFunctions'
 
 import FormPermissionComponent from '../components/FormPermissionComponent.vue'
 
+interface ParamsPermissions {
+  page: number
+  perPage: number
+  search: string | null
+}
+
 const headers: DataTableColumn[] = [
   { title: 'Nombre', key: 'name' },
-  { title: 'Descripción', key: 'description' }
+  { title: 'Descripción', key: 'description' },
+  { title: 'Etiqueta', key: 'tag' }
 ]
 
-const paramsPermissions = reactive({
+const paramsPermissions: ParamsPermissions = reactive({
   page: 1,
-  perPage: 10
+  perPage: 10,
+  search: null
 })
 
 const sortByPermissions: SortItem = reactive({
@@ -47,6 +75,11 @@ const sortByPermissions: SortItem = reactive({
 })
 
 const totalItems = ref(0)
+const searchInput = ref('')
+
+// rule
+const minLengthRule = (v: string) =>
+  !v || v.length >= 3 || 'Debe tener al menos 3 caracteres'
 
 const listPermission = computed(() => {
   const data = permissionsQuery.data.value?.data || []
@@ -58,7 +91,8 @@ const permissionsQuery = useQuery({
   queryFn: () =>
     settingsServices.getListPermissions({
       page: paramsPermissions.page,
-      per_page: paramsPermissions.perPage
+      per_page: paramsPermissions.perPage,
+      name: paramsPermissions.search
     })
 })
 
@@ -79,5 +113,18 @@ const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
 
   sortByPermissions.key = key
   sortByPermissions.order = order
+}
+
+// functions
+let timeout: ReturnType<typeof setTimeout> | null = null
+const handleDebouncedInput = () => {
+  if (timeout) clearTimeout(timeout)
+
+  timeout = setTimeout(() => {
+    const trimmed = searchInput.value?.trim() || ''
+    if (trimmed.length >= 3 || trimmed.length === 0) {
+      paramsPermissions.search = trimmed || null
+    }
+  }, 1000)
 }
 </script>
