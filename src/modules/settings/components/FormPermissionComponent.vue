@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="650">
+  <v-dialog max-width="650" v-model="showDialog">
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
         v-bind="activatorProps"
@@ -10,7 +10,7 @@
       />
     </template>
 
-    <template v-slot:default="{ isActive }">
+    <template v-slot:default>
       <v-card title="Agregar permiso">
         <v-card-text>
           <form @submit.prevent="createPermission">
@@ -76,7 +76,7 @@
                   text="Cancelar"
                   class="text-no-style"
                   variant="outlined"
-                  @click=";(isActive.value = false), handleReset()"
+                  @click="closeModal"
                 />
               </v-col>
             </v-row>
@@ -89,13 +89,17 @@
 
 <script setup lang="ts">
 import { permissionSchema } from '../settings.schemas'
+import permissionsServices from '../services/permissions.services'
+import type { InferType } from 'yup'
+
+type PermissionForm = InferType<typeof permissionSchema>
 
 interface ActionOption {
   id: number
   name: string
 }
 
-const { handleSubmit, handleReset } = useForm({
+const { handleSubmit, handleReset } = useForm<PermissionForm>({
   validationSchema: permissionSchema
 })
 
@@ -109,6 +113,8 @@ const optionActions = [
   { id: 7, name: 'ELIMINAR' },
   { id: 8, name: 'OTRO' }
 ]
+
+const showDialog = ref(false)
 
 const action = useField<ActionOption>('action')
 const prefix = useField<string>('prefix')
@@ -126,9 +132,31 @@ const namePrefix = computed(() => {
   }
 })
 
-const createPermission = handleSubmit(values => {
-  // mutate
+const { mutate } = useMutation({
+  mutationFn: permissionsServices.postNewPermission,
+  onSuccess: data => {
+    useNotification(data.data.message, { type: 'success' })
+    closeModal()
+  }
 })
+
+const createPermission = handleSubmit(values => {
+  const name =
+    values.action.id == 8
+      ? `${values.prefix}_${values.name}`
+      : `${values.action.name}_${values.name}`
+
+  mutate({
+    name,
+    description: values.description,
+    tag: values.tag
+  })
+})
+
+const closeModal = () => {
+  showDialog.value = false
+  handleReset()
+}
 </script>
 <style lang="scss" scoped>
 .name-input {
