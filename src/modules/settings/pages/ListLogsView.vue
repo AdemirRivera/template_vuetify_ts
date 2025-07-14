@@ -12,6 +12,8 @@
           @input="handleDebouncedInput"
           maxlength="100"
           :rules="[minLengthRule]"
+          clearable
+          @click:clear="paramsLogs.search = null"
         />
       </v-col>
     </v-row>
@@ -125,7 +127,8 @@ const logsQuery = useQuery({
   queryFn: () =>
     settingsServices.getListLogs({
       page: paramsLogs.page,
-      per_page: paramsLogs.perPage
+      per_page: paramsLogs.perPage,
+      search: paramsLogs.search
     })
 })
 
