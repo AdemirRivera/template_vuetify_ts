@@ -6,7 +6,7 @@
           {{ mode === 'create' ? 'Crear' : 'Editar' }} permiso
         </v-card-title>
         <v-card-text>
-          <form @submit.prevent="createPermission">
+          <form @submit.prevent="submitForm">
             <v-row>
               <v-col cols="12" md="6">
                 <v-autocomplete
@@ -108,7 +108,7 @@ const {
   description,
   tag,
   namePrefix,
-  createPermission,
+  submitForm,
   handleReset
 } = useFormPermission(emit, mode, initialValues, modelValue)
 </script>

@@ -49,7 +49,7 @@ export default function useFormPermission(
         return ''
     })
 
-    const { mutate } = useMutation({
+    const createPermission = useMutation({
         mutationFn: permissionsServices.postNewPermission,
         onSuccess: data => {
             useNotification(data.data.message, { type: 'success' })
@@ -58,24 +58,51 @@ export default function useFormPermission(
         }
     })
 
-    const createPermission = handleSubmit(values => {
+    const editPermission = useMutation({
+        mutationFn: permissionsServices.putEditPermissionById,
+        onSuccess: data => {
+            useNotification(data.data.message, { type: 'success' })
+            emit('reset')
+            modelValue.value = false
+        }
+    })
+
+    const submitForm = handleSubmit(values => {
         const fullName = values.action.id === 8
             ? `${values.prefix}_${values.name}`
             : `${values.action.name}_${values.name}`
 
-        mutate({
-            name: fullName,
-            description: values.description,
-            tag: values.tag
-        })
+        if (mode.value === 'create') {
+            createPermission.mutate({
+                name: fullName,
+                description: values.description,
+                tag: values.tag
+            })
+            return
+        }
+
+        if (mode.value === 'edit' && initialValues.value) {
+            editPermission.mutate({
+                id_permission: initialValues.value.id,
+                params: {
+                    name: fullName,
+                    description: values.description,
+                    tag: values.tag
+                }
+            })
+            return
+        }
+
     })
 
     watch(() => modelValue.value, (newValue) => {
         if (newValue && mode.value === 'edit' && initialValues.value) {
+            const parts = initialValues.value.name.split('_');
+
             setValues({
                 action: optionActions.find(opt => opt.name === initialValues.value?.name.split('_')[0]),
-                prefix: initialValues.value.name.split('_')[0] === 'OTRO' ? initialValues.value.name.split('_')[1] : '',
-                name: initialValues.value.name.split('_')[1] || '',
+                prefix: parts[0] === 'OTRO' ? initialValues.value.name.split('_')[1] : '',
+                name: parts.slice(1).join('_') || '',
                 description: initialValues.value.description || '',
                 tag: initialValues.value.tag || ''
             })
@@ -90,7 +117,7 @@ export default function useFormPermission(
         description,
         tag,
         namePrefix,
-        createPermission,
+        submitForm,
         handleReset,
         modelValue
     }
