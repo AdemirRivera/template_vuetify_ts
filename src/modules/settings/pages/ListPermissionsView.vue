@@ -61,13 +61,14 @@
     </v-data-table-server>
 
     <modal-confirmation-component
+      @after-leave="itemSelected = null"
       v-model="showModalDelete"
       icon-type
       icon="mdi-close"
       icon-color="error"
       subtitle="¿Estás seguro de que deseas desactivar este permiso?"
       show-cancel
-      @cancel="closeModalDelete"
+      @cancel="showModalDelete = false"
       @accept="deletePermissionById"
     />
 
@@ -149,7 +150,7 @@ const permissionDelete = useMutation({
 
     permissionsQuery.refetch()
 
-    closeModalDelete()
+    showModalDelete.value = false
   }
 })
 
@@ -183,11 +184,6 @@ const handleDebouncedInput = () => {
       paramsPermissions.search = trimmed || null
     }
   }, 1000)
-}
-
-const closeModalDelete = () => {
-  showModalDelete.value = false
-  itemSelected.value = null
 }
 
 const deletePermissionById = () => {
