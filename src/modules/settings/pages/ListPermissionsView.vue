@@ -4,7 +4,7 @@
 
     <div class="d-flex align-center justify-space-between">
       <title-component title="Permisos" />
-      <form-permission-component />
+      <form-permission-component @reset="permissionsQuery.refetch()" />
     </div>
 
     <v-row>
@@ -36,7 +36,28 @@
       <template v-slot:item.tag="{ item }">
         <v-chip :text="item.tag" />
       </template>
+      <template v-slot:item.actions="{ item }">
+        <v-btn icon="mdi-pencil" variant="text" size="small" color="primary" />
+        <v-btn
+          icon="mdi-delete"
+          variant="text"
+          size="small"
+          color="error"
+          @click=";(itemSelected = item), (showModalDelete = true)"
+        />
+      </template>
     </v-data-table-server>
+
+    <modal-confirmation-component
+      v-model="showModalDelete"
+      icon-type
+      icon="mdi-close"
+      icon-color="error"
+      subtitle="¿Estás seguro de que deseas desactivar este permiso?"
+      show-cancel
+      @cancel="closeModalDelete"
+      @accept="deletePermissionById"
+    />
   </v-container>
 </template>
 
@@ -46,9 +67,9 @@ import type {
   DataTableColumn,
   SortItem
 } from '@/interfaces/vuetify.interfaces'
-import settingsServices from '../services/permissions.services'
+import type { DataListPermissions } from '../interfaces/permissions.interfaces'
+import permissionsServices from '../services/permissions.services'
 import { sortArray } from '@/utils/globalFunctions'
-
 import FormPermissionComponent from '../components/FormPermissionComponent.vue'
 
 interface ParamsPermissions {
@@ -60,7 +81,8 @@ interface ParamsPermissions {
 const headers: DataTableColumn[] = [
   { title: 'Nombre', key: 'name' },
   { title: 'Descripción', key: 'description' },
-  { title: 'Etiqueta', key: 'tag' }
+  { title: 'Etiqueta', key: 'tag', align: 'center' },
+  { title: 'Acciones', key: 'actions', sortable: false, align: 'center' }
 ]
 
 const paramsPermissions: ParamsPermissions = reactive({
@@ -76,6 +98,8 @@ const sortByPermissions: SortItem = reactive({
 
 const totalItems = ref(0)
 const searchInput = ref('')
+const showModalDelete = ref(false)
+const itemSelected = ref<DataListPermissions | null>()
 
 // rule
 const minLengthRule = (v: string) =>
@@ -89,11 +113,22 @@ const listPermission = computed(() => {
 const permissionsQuery = useQuery({
   queryKey: ['list_permissions', paramsPermissions],
   queryFn: () =>
-    settingsServices.getListPermissions({
+    permissionsServices.getListPermissions({
       page: paramsPermissions.page,
       per_page: paramsPermissions.perPage,
       name: paramsPermissions.search
     })
+})
+
+const permissionDelete = useMutation({
+  mutationFn: permissionsServices.deletePermissionById,
+  onSuccess: (data) => {
+    useNotification(data.data.message, { type: 'success' })
+
+    permissionsQuery.refetch()
+
+    closeModalDelete()
+  }
 })
 
 watch(
@@ -126,5 +161,16 @@ const handleDebouncedInput = () => {
       paramsPermissions.search = trimmed || null
     }
   }, 1000)
+}
+
+const closeModalDelete = () => {
+  showModalDelete.value = false
+  itemSelected.value = null
+}
+
+const deletePermissionById = () => {
+  if (itemSelected.value) {
+    permissionDelete.mutate(itemSelected.value.id)
+  }
 }
 </script>

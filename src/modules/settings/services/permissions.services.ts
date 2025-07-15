@@ -12,7 +12,12 @@ const postNewPermission = async (params: DataNewPermission) => {
     return await httpClient.post<MessageResponse>('api/v1/permission', params)
 }
 
+const deletePermissionById = async (id_permission: string) => {
+    return await httpClient.delete<MessageResponse>(`api/v1/permission/${id_permission}`)
+}
+
 export default {
     getListPermissions,
-    postNewPermission
+    postNewPermission,
+    deletePermissionById
 };

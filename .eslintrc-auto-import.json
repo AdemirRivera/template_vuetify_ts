@@ -75,7 +75,7 @@
     "useMutation": true,
     "useNotification": true,
     "useQuery": true,
-    "useQueryClient ": true,
+    "useQueryClient": true,
     "useRoute": true,
     "useRouter": true,
     "useSlots": true,
