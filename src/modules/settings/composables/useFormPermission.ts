@@ -1,6 +1,8 @@
 import { permissionSchema } from '../settings.schemas'
 import permissionsServices from '../services/permissions.services'
 import type { InferType } from 'yup'
+import type { DataListPermissions } from '../interfaces/permissions.interfaces'
+import type { Ref } from 'vue'
 
 type PermissionForm = InferType<typeof permissionSchema>
 
@@ -9,8 +11,12 @@ interface ActionOption {
     name: string
 }
 
-export default function useFormPermission(emit: (event: 'reset') => void) {
-    const showDialog = ref(false)
+export default function useFormPermission(
+    emit: (event: 'reset') => void,
+    mode: Ref<'create' | 'edit'>,
+    initialValues: Ref<DataListPermissions | null>,
+    modelValue: Ref<boolean | undefined> = ref(false)
+) {
 
     const optionActions: ActionOption[] = [
         { id: 1, name: 'VER' },
@@ -23,7 +29,7 @@ export default function useFormPermission(emit: (event: 'reset') => void) {
         { id: 8, name: 'OTRO' }
     ]
 
-    const { handleSubmit, handleReset } = useForm<PermissionForm>({
+    const { handleSubmit, handleReset, setValues } = useForm<PermissionForm>({
         validationSchema: permissionSchema
     })
 
@@ -48,7 +54,7 @@ export default function useFormPermission(emit: (event: 'reset') => void) {
         onSuccess: data => {
             useNotification(data.data.message, { type: 'success' })
             emit('reset')
-            closeModal()
+            modelValue.value = false
         }
     })
 
@@ -64,13 +70,19 @@ export default function useFormPermission(emit: (event: 'reset') => void) {
         })
     })
 
-    const closeModal = () => {
-        showDialog.value = false
-        handleReset()
-    }
+    watch(() => modelValue.value, (newValue) => {
+        if (newValue && mode.value === 'edit' && initialValues.value) {
+            setValues({
+                action: optionActions.find(opt => opt.name === initialValues.value?.name.split('_')[0]),
+                prefix: initialValues.value.name.split('_')[0] === 'OTRO' ? initialValues.value.name.split('_')[1] : '',
+                name: initialValues.value.name.split('_')[1] || '',
+                description: initialValues.value.description || '',
+                tag: initialValues.value.tag || ''
+            })
+        }
+    })
 
     return {
-        showDialog,
         optionActions,
         action,
         prefix,
@@ -79,6 +91,7 @@ export default function useFormPermission(emit: (event: 'reset') => void) {
         tag,
         namePrefix,
         createPermission,
-        closeModal
+        handleReset,
+        modelValue
     }
 }

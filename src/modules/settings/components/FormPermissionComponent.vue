@@ -1,17 +1,10 @@
 <template>
-  <v-dialog max-width="650" v-model="showDialog">
-    <template v-slot:activator="{ props: activatorProps }">
-      <v-btn
-        v-bind="activatorProps"
-        class="text-no-style"
-        color="primary"
-        append-icon="mdi-plus"
-        text="Agregar"
-      />
-    </template>
-
+  <v-dialog max-width="650" v-model="modelValue" @after-leave="handleReset()">
     <template v-slot:default>
-      <v-card title="Agregar permiso">
+      <v-card>
+        <v-card-title>
+          {{ mode === 'create' ? 'Crear' : 'Editar' }} permiso
+        </v-card-title>
         <v-card-text>
           <form @submit.prevent="createPermission">
             <v-row>
@@ -72,16 +65,16 @@
               <v-col cols="12" class="d-flex ga-3 justify-center">
                 <v-btn
                   color="primary"
-                  text="Guardar"
-                  class="text-no-style"
-                  type="submit"
-                />
-                <v-btn
-                  color="primary"
                   text="Cancelar"
                   class="text-no-style"
                   variant="outlined"
-                  @click="closeModal"
+                  @click="modelValue = false"
+                />
+                <v-btn
+                  color="primary"
+                  text="Guardar"
+                  class="text-no-style"
+                  type="submit"
                 />
               </v-col>
             </v-row>
@@ -94,10 +87,20 @@
 
 <script setup lang="ts">
 import useFormPermission from '../composables/useFormPermission'
+import type { DataListPermissions } from '../interfaces/permissions.interfaces'
+
+const modelValue = defineModel<boolean>()
 
 const emit = defineEmits(['reset'])
+
+const props = defineProps<{
+  mode: 'create' | 'edit'
+  initialValues: DataListPermissions | null
+}>()
+
+const { mode, initialValues } = toRefs(props)
+
 const {
-  showDialog,
   optionActions,
   action,
   prefix,
@@ -106,8 +109,8 @@ const {
   tag,
   namePrefix,
   createPermission,
-  closeModal
-} = useFormPermission(emit)
+  handleReset
+} = useFormPermission(emit, mode, initialValues, modelValue)
 </script>
 
 <style lang="scss" scoped>

@@ -4,7 +4,13 @@
 
     <div class="d-flex align-center justify-space-between">
       <title-component title="Permisos" />
-      <form-permission-component @reset="permissionsQuery.refetch()" />
+      <v-btn
+        class="text-no-style"
+        color="primary"
+        append-icon="mdi-plus"
+        text="Agregar"
+        @click="openModalForm('create')"
+      />
     </div>
 
     <v-row>
@@ -37,7 +43,13 @@
         <v-chip :text="item.tag" />
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-btn icon="mdi-pencil" variant="text" size="small" color="primary" />
+        <v-btn
+          icon="mdi-pencil"
+          variant="text"
+          size="small"
+          color="primary"
+          @click="openModalForm('edit', item)"
+        />
         <v-btn
           icon="mdi-delete"
           variant="text"
@@ -57,6 +69,14 @@
       show-cancel
       @cancel="closeModalDelete"
       @accept="deletePermissionById"
+    />
+
+    <form-permission-component
+      v-model="showModalForm"
+      @reset="permissionsQuery.refetch()"
+      :mode="formMode"
+      :initial-values="itemSelected"
+      @close=";(showModalForm = false), (itemSelected = null)"
     />
   </v-container>
 </template>
@@ -98,8 +118,10 @@ const sortByPermissions: SortItem = reactive({
 
 const totalItems = ref(0)
 const searchInput = ref('')
+const formMode = ref<'create' | 'edit'>('create')
 const showModalDelete = ref(false)
-const itemSelected = ref<DataListPermissions | null>()
+const showModalForm = ref(false)
+const itemSelected = ref<DataListPermissions | null>(null)
 
 // rule
 const minLengthRule = (v: string) =>
@@ -122,7 +144,7 @@ const permissionsQuery = useQuery({
 
 const permissionDelete = useMutation({
   mutationFn: permissionsServices.deletePermissionById,
-  onSuccess: (data) => {
+  onSuccess: data => {
     useNotification(data.data.message, { type: 'success' })
 
     permissionsQuery.refetch()
@@ -172,5 +194,11 @@ const deletePermissionById = () => {
   if (itemSelected.value) {
     permissionDelete.mutate(itemSelected.value.id)
   }
+}
+
+const openModalForm = (mode: 'create' | 'edit', item?: DataListPermissions) => {
+  formMode.value = mode
+  itemSelected.value = item || null
+  showModalForm.value = true
 }
 </script>
