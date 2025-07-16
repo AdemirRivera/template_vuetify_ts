@@ -1,7 +1,16 @@
 <template>
   <v-container fluid>
     <!-- title -->
-    <title-component title="Roles" />
+    <div class="d-flex align-center justify-space-between">
+      <title-component title="Roles" />
+      <v-btn
+        class="text-no-style"
+        color="primary"
+        append-icon="mdi-plus"
+        text="Agregar"
+        @click="$router.push({ name: 'addRole' })"
+      />
+    </div>
 
     <!-- table -->
     <v-data-table-server
@@ -12,7 +21,31 @@
       :items-length="totalItems"
       :loading="rolesQuery.isLoading.value"
       @update:options="onPaginate"
-    />
+    >
+      <template v-slot:item.status="{ item }">
+        <v-chip
+          :text="item.activo ? 'Activo' : 'Inactivo'"
+          :color="item.activo ? 'success' : 'error'"
+        />
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          icon="mdi-pencil"
+          variant="text"
+          size="small"
+          color="primary"
+          v-tooltip:bottom="'Editar'"
+          @click="$router.push({ name: 'editRole', params: { id: item.id } })"
+        />
+        <v-btn
+          icon="mdi-delete"
+          variant="text"
+          size="small"
+          color="error"
+          v-tooltip:bottom="'Eliminar'"
+        />
+      </template>
+    </v-data-table-server>
   </v-container>
 </template>
 
@@ -22,12 +55,13 @@ import type {
   DataTableColumn,
   SortItem
 } from '@/interfaces/vuetify.interfaces'
-import settingsServices from '../services/settings.services'
+import settingsServices from '../../services/settings.services'
 import { sortArray } from '@/utils/globalFunctions'
 
 const headers: DataTableColumn[] = [
   { title: 'Nombre', key: 'name' },
-  { title: 'Descripción', key: 'description' }
+  { title: 'Estado', key: 'status' },
+  { title: 'Acciones', key: 'actions', sortable: false }
 ]
 
 const paramsRoles = reactive({

@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <!-- title -->
-
     <div class="d-flex align-center justify-space-between">
       <title-component title="Permisos" />
       <v-btn
@@ -49,13 +48,15 @@
           size="small"
           color="primary"
           @click="openModalForm('edit', item)"
-        />
-        <v-btn
+          v-tooltip:bottom="'Editar'"
+          />
+          <v-btn
           icon="mdi-delete"
           variant="text"
           size="small"
           color="error"
           @click=";(itemSelected = item), (showModalDelete = true)"
+          v-tooltip:bottom="'Eliminar'"
         />
       </template>
     </v-data-table-server>
@@ -66,7 +67,7 @@
       icon-type
       icon="mdi-close"
       icon-color="error"
-      subtitle="¿Estás seguro de que deseas desactivar este permiso?"
+      subtitle="¿Estás seguro de que deseas eliminar este permiso?"
       show-cancel
       @cancel="showModalDelete = false"
       @accept="deletePermissionById"
