@@ -12,7 +12,7 @@ const postNewPermission = async (params: DataNewPermission) => {
     return await httpClient.post<MessageResponse>('api/v1/permission', params)
 }
 
-const putEditPermissionById = async ({ id_permission, params }: { id_permission: string, params: DataNewPermission }) => {
+const putEditPermissionById = async ({ id_permission, params }: { id_permission: string, params: Partial<DataNewPermission> }) => {
     return await httpClient.put<MessageResponse>(`api/v1/permission/${id_permission}`, params)
 }
 

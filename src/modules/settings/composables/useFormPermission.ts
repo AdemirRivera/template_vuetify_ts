@@ -1,7 +1,7 @@
 import { permissionSchema } from '../settings.schemas'
 import permissionsServices from '../services/permissions.services'
 import type { InferType } from 'yup'
-import type { DataListPermissions } from '../interfaces/permissions.interfaces'
+import type { DataListPermissions, DataNewPermission } from '../interfaces/permissions.interfaces'
 import type { Ref } from 'vue'
 
 type PermissionForm = InferType<typeof permissionSchema>
@@ -67,33 +67,61 @@ export default function useFormPermission(
         }
     })
 
+    function getChangedFields(
+        initialValues: DataListPermissions,
+        params: DataNewPermission
+    ): Partial<DataNewPermission> | null {
+        const changed: Partial<DataNewPermission> = {};
+
+        // Comparamos cada campo excepto 'id'
+        if (initialValues.name !== params.name) {
+            changed.name = params.name;
+        }
+        if (initialValues.description !== params.description) {
+            changed.description = params.description;
+        }
+        if (initialValues.tag !== params.tag) {
+            changed.tag = params.tag;
+        }
+
+        // Si no hay cambios, retornamos null
+        if (Object.keys(changed).length === 0) {
+            return null;
+        }
+
+        return changed;
+    }
+
     const submitForm = handleSubmit(values => {
         const fullName = values.action.id === 8
             ? `${values.prefix}_${values.name}`
-            : `${values.action.name}_${values.name}`
+            : `${values.action.name}_${values.name}`;
+
+        const params: DataNewPermission = {
+            name: fullName,
+            description: values.description,
+            tag: values.tag
+        };
 
         if (mode.value === 'create') {
-            createPermission.mutate({
-                name: fullName,
-                description: values.description,
-                tag: values.tag
-            })
-            return
+            createPermission.mutate(params);
+            return;
         }
 
         if (mode.value === 'edit' && initialValues.value) {
+            const changedFields = getChangedFields(initialValues.value, params);
+            if (!changedFields) {
+                useNotification('No se detectaron cambios.', { type: 'warning' })
+                return;
+            }
+
             editPermission.mutate({
                 id_permission: initialValues.value.id,
-                params: {
-                    name: fullName,
-                    description: values.description,
-                    tag: values.tag
-                }
-            })
-            return
+                params: changedFields
+            });
         }
+    });
 
-    })
 
     watch(() => modelValue.value, (newValue) => {
         if (newValue && mode.value === 'edit' && initialValues.value) {
