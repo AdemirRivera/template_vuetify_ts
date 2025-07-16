@@ -38,14 +38,37 @@
           @click="$router.push({ name: 'editRole', params: { id: item.id } })"
         />
         <v-btn
-          icon="mdi-delete"
+          :icon="`${
+            item.activo
+              ? 'mdi-close-circle-outline'
+              : 'mdi-check-circle-outline'
+          }`"
           variant="text"
           size="small"
-          color="error"
-          v-tooltip:bottom="'Eliminar'"
+          :color="`${item.activo ? 'error' : 'success'}`"
+          v-tooltip:bottom="item.activo ? 'Desactivar' : 'Activar'"
+          @click=";(itemSelected = item), (showModalStatus = true)"
         />
       </template>
     </v-data-table-server>
+
+    <modal-confirmation-component
+      @after-leave="itemSelected = null"
+      v-model="showModalStatus"
+      icon-type
+      :icon="`${
+        itemSelected?.activo
+          ? 'mdi-close-circle-outline'
+          : 'mdi-check-circle-outline'
+      }`"
+      :icon-color="`${itemSelected?.activo ? 'error' : 'success'}`"
+      :subtitle="`¿Estás seguro que deseas ${
+        itemSelected?.activo ? 'desactivar' : 'activar'
+      } este rol?`"
+      show-cancel
+      @cancel="showModalStatus = false"
+      @accept="changeStatusRole"
+    />
   </v-container>
 </template>
 
@@ -57,6 +80,7 @@ import type {
 } from '@/interfaces/vuetify.interfaces'
 import settingsServices from '../../services/settings.services'
 import { sortArray } from '@/utils/globalFunctions'
+import type { DataRoles } from '../../interfaces/settings.interfaces'
 
 const headers: DataTableColumn[] = [
   { title: 'Nombre', key: 'name' },
@@ -75,6 +99,8 @@ const sortByRoles: SortItem = reactive({
 })
 
 const totalItems = ref(0)
+const itemSelected = ref<DataRoles | null>(null)
+const showModalStatus = ref(false)
 
 const listRoles = computed(() => {
   const data = rolesQuery.data.value?.data || []
@@ -88,6 +114,17 @@ const rolesQuery = useQuery({
       page: paramsRoles.page,
       per_page: paramsRoles.perPage
     })
+})
+
+const roleMutation = useMutation({
+  mutationFn: settingsServices.patchRoleById,
+  onSuccess: data => {
+    useNotification(data.data.message, { type: 'success' })
+
+    rolesQuery.refetch()
+
+    showModalStatus.value = false
+  }
 })
 
 watch(
@@ -107,5 +144,11 @@ const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
 
   sortByRoles.key = key
   sortByRoles.order = order
+}
+
+const changeStatusRole = () => {
+  if (itemSelected.value) {
+    roleMutation.mutate(itemSelected.value.id)
+  }
 }
 </script>

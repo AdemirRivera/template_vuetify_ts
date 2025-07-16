@@ -49,8 +49,8 @@
           color="primary"
           @click="openModalForm('edit', item)"
           v-tooltip:bottom="'Editar'"
-          />
-          <v-btn
+        />
+        <v-btn
           icon="mdi-delete"
           variant="text"
           size="small"
@@ -67,7 +67,7 @@
       icon-type
       icon="mdi-close"
       icon-color="error"
-      subtitle="¿Estás seguro de que deseas eliminar este permiso?"
+      subtitle="¿Estás seguro que deseas eliminar este permiso?"
       show-cancel
       @cancel="showModalDelete = false"
       @accept="deletePermissionById"
@@ -144,7 +144,7 @@ const permissionsQuery = useQuery({
     })
 })
 
-const permissionDelete = useMutation({
+const permissionMutation = useMutation({
   mutationFn: permissionsServices.deletePermissionById,
   onSuccess: data => {
     useNotification(data.data.message, { type: 'success' })
@@ -189,7 +189,7 @@ const handleDebouncedInput = () => {
 
 const deletePermissionById = () => {
   if (itemSelected.value) {
-    permissionDelete.mutate(itemSelected.value.id)
+    permissionMutation.mutate(itemSelected.value.id)
   }
 }
 
