@@ -13,7 +13,72 @@
     </div>
 
     <!-- table -->
-    <v-data-table-server
+    <v-row dense>
+      <v-col cols="12" v-if="isLoading" class="text-center my-12">
+        <span> Cargando roles </span>
+        <v-progress-linear height="6" indeterminate rounded />
+      </v-col>
+      <v-col
+        v-else-if="listRoles.length > 0"
+        cols="12"
+        sm="4"
+        md="3"
+        v-for="role in listRoles || []"
+        :key="role.id"
+      >
+        <v-card variant="outlined">
+          <v-card-text class="d-flex flex-column pt-0 pr-0">
+            <div class="d-flex justify-space-between align-center mb-2">
+              <div>
+                <span
+                  v-text="role.activo ? 'Activo' : 'Inactivo'"
+                  :class="role.activo ? 'text-success' : 'text-error'"
+                />
+                <v-icon
+                  :icon="`${
+                    role.activo
+                      ? 'mdi-close-circle-outline'
+                      : 'mdi-check-circle-outline'
+                  }`"
+                  variant="text"
+                  size="small"
+                  :color="`${role.activo ? 'error' : 'success'}`"
+                  v-tooltip:bottom="role.activo ? 'Desactivar' : 'Activar'"
+                  @click=";(itemSelected = role), (showModalStatus = true)"
+                  class="ml-2"
+                />
+              </div>
+              <v-btn
+                icon="mdi-pencil"
+                variant="text"
+                size="small"
+                color="primary"
+                @click="
+                  $router.push({ name: 'editRole', params: { id: role.id } })
+                "
+              />
+            </div>
+            <span
+              :class="`text-h5 font-weight-medium ${
+                role.activo ? '' : 'text-grey-lighten-1'
+              }`"
+              v-text="role.name"
+            />
+            <span
+              :class="`cursor-pointer ${
+                role.activo ? 'text-blue-darken-2' : 'text-grey-lighten-1'
+              }`"
+            >
+              Ver permisos
+            </span>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" v-else class="text-center my-12">
+        <span>No hay roles disponibles</span>
+      </v-col>
+    </v-row>
+    <!-- <v-data-table-server
       :headers="headers"
       :items="listRoles"
       :items-per-page="paramsRoles.perPage"
@@ -50,7 +115,7 @@
           @click=";(itemSelected = item), (showModalStatus = true)"
         />
       </template>
-    </v-data-table-server>
+    </v-data-table-server> -->
 
     <modal-confirmation-component
       @after-leave="itemSelected = null"
@@ -103,11 +168,15 @@ const itemSelected = ref<DataRoles | null>(null)
 const showModalStatus = ref(false)
 
 const listRoles = computed(() => {
-  const data = rolesQuery.data.value?.data || []
+  const data = rolesQuery.value?.data || []
   return sortArray(sortByRoles, data)
 })
 
-const rolesQuery = useQuery({
+const {
+  isLoading,
+  data: rolesQuery,
+  refetch
+} = useQuery({
   queryKey: ['list_roles', paramsRoles],
   queryFn: () =>
     settingsServices.getListRoles({
@@ -121,14 +190,14 @@ const roleMutation = useMutation({
   onSuccess: data => {
     useNotification(data.data.message, { type: 'success' })
 
-    rolesQuery.refetch()
+    refetch()
 
     showModalStatus.value = false
   }
 })
 
 watch(
-  () => rolesQuery.data.value?.pagination.total,
+  () => rolesQuery.value?.pagination.total,
   newTotal => {
     if (newTotal !== undefined && newTotal !== null) {
       totalItems.value = newTotal
