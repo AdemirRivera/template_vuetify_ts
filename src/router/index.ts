@@ -1,16 +1,16 @@
 /**
  * router/index.ts
- *
- * -
  */
 
 // Composables
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { setupRouterGuards } from './helpers';
+
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth?: boolean;
-    title: string;
+    title?: string;
+    layout?: 'default' | 'auth' | 'standalone';
   }
 }
 
@@ -21,6 +21,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('../layouts/DefaultLayout.vue'),
+    meta: { layout: 'default' },
     children: [
       {
         path: '',
@@ -34,16 +35,16 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('../layouts/AuthLayout.vue'),
+    meta: { layout: 'auth' },
     children: [
       ...authRoutes
     ]
   },
   {
-    // path: "/:pathMatch(.*)*",
-    path: "/forbidden",
-    name: "forbidden",
-    component: () => import("../pages/ForbiddenView.vue"),
-    meta: { requiresAuth: false, title: "Forbidden" },
+    path: '/forbidden',
+    name: 'forbidden',
+    component: () => import('../pages/ForbiddenView.vue'),
+    meta: { requiresAuth: false, title: 'Forbidden', layout: 'standalone' },
   },
 ]
 
