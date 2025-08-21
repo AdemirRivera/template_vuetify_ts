@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="500" v-model="model">
+  <v-dialog max-width="500" v-model="model" @after-leave="emit('after-leave')">
     <v-card class="rounded-xl">
       <v-card-text
         class="d-flex flex-column text-primary text-no-style px-12 my-8"
@@ -44,7 +44,7 @@ const model = defineModel({
 })
 
 // emits
-const emit = defineEmits(['accept', 'cancel'])
+const emit = defineEmits(['accept', 'cancel', 'after-leave'])
 
 // props
 const props = defineProps({

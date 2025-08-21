@@ -1,7 +1,6 @@
 // Plugins
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import Fonts from 'unplugin-fonts/vite'
 import Vue from '@vitejs/plugin-vue'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
@@ -20,7 +19,7 @@ export default defineConfig({
           'vue-router': ['useRoute', 'useRouter'],
           'vee-validate': ['useForm', 'useField'],
           'vuetify': ['useDisplay'],
-          '@tanstack/vue-query': ['useQuery', 'useMutation', 'useQueryClient '],
+          '@tanstack/vue-query': ['useQuery', 'useMutation', 'useQueryClient'],
           'vue3-toastify': [
             ['toast', 'useNotification'],
           ],
@@ -46,17 +45,6 @@ export default defineConfig({
       autoImport: true,
       styles: {
         configFile: 'src/styles/settings.scss',
-      },
-    }),
-    Fonts({
-      fontsource: {
-        families: [
-          {
-            name: 'Roboto',
-            weights: [100, 300, 400, 500, 700, 900],
-            styles: ['normal', 'italic'],
-          },
-        ],
       },
     }),
   ],

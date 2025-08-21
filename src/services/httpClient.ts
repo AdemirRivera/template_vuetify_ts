@@ -1,4 +1,5 @@
 import { useAppStore } from '../stores/app'
+import { useRouter } from 'vue-router';
 
 import axios, {
     type AxiosInstance,
@@ -17,13 +18,19 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig { disableL
 
 // --- 1. Tipos específicos para la respuesta de refresh ---
 interface RefreshResponse {
-    token: string;
-    refresh_token: string;
+    authorization: {
+        token: {
+            token: string,
+            expires_at: Date
+        }
+        refresh_token: string;
+    },
+    two_factor: boolean
 }
 
 // --- 2. Constantes de Endpoints y Mensajes ---
 const API_BASE_URL = import.meta.env.VITE_VUE_APP_API_URL || "http://127.0.0.1:8000/";
-const REFRESH_ENDPOINT = "/api/v1/refresh";
+const REFRESH_ENDPOINT = "/api/v1/auth/refresh";
 
 const ERROR_MESSAGES = {
     noConexion: "No se pudo establecer conexión con el servidor",
@@ -77,12 +84,14 @@ let refreshPromise: Promise<string> | null = null;
  * que se resuelve con el nuevo Access Token. Si falla, redirige al login.
  */
 async function refreshAccessToken(): Promise<string> {
+    const Router = useRouter()
+
     const refreshToken = getLocalStorageItem("refresh_token");
     if (!refreshToken) {
         // No existe refresh_token, redirigimos al login inmediatamente
         removeLocalStorageItem("token");
         removeLocalStorageItem("refresh_token");
-        useRouter().push("/login");
+        Router.push({ name: 'login' });
         return Promise.reject(new Error("No hay refresh token disponible"));
     }
 
@@ -95,18 +104,19 @@ async function refreshAccessToken(): Promise<string> {
         );
 
         // Guardamos los nuevos tokens
-        setLocalStorageItem("token", response.data.token);
-        setLocalStorageItem("refresh_token", response.data.refresh_token);
+        setLocalStorageItem("token", response.data.authorization.token.token);
+        setLocalStorageItem("refresh_token", response.data.authorization.refresh_token);
 
         // Actualizamos el header por defecto
-        httpClient.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
+        httpClient.defaults.headers.common.Authorization = `Bearer ${response.data.authorization.token.token}`;
 
-        return response.data.token;
+        return response.data.authorization.token.token;
     } catch (err) {
+        const Router = useRouter()
         // Si falla el refresco, limpiamos y redirigimos
         removeLocalStorageItem("token");
         removeLocalStorageItem("refresh_token");
-        useRouter().push("/login");
+        Router.push({ name: 'login' });
         return Promise.reject(err);
     }
 }
@@ -213,10 +223,7 @@ httpClient.interceptors.response.use(
         if (error.request && !error.response) {
             try {
                 useNotification(ERROR_MESSAGES.noConexion, {
-                    "theme": "colored",
                     "type": "error",
-                    "hideProgressBar": true,
-                    "dangerouslyHTMLString": true
                 })
             } catch (_) {
                 // Silencioso
@@ -228,8 +235,8 @@ httpClient.interceptors.response.use(
         const status = error.response?.status;
         const originalConfig = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-        // 7.1. Token expirado o acceso prohibido (status 403)
-        if (status === 403 && !originalConfig._retry) {
+        // 7.1. Token expirado o acceso prohibido (status 401)
+        if (status === 401 && !originalConfig._retry) {
             originalConfig._retry = true;
 
             try {
@@ -239,11 +246,8 @@ httpClient.interceptors.response.use(
                 // Notificamos al usuario
                 try {
                     useNotification(ERROR_MESSAGES.sesionActualizada, {
-                        "theme": "colored",
                         "type": "info",
                         "autoClose": 500,
-                        "hideProgressBar": true,
-                        "dangerouslyHTMLString": true,
                         "transition": "slide"
                     })
                 } catch (_) {
@@ -295,10 +299,7 @@ httpClient.interceptors.response.use(
 
             try {
                 useNotification(userMessage, {
-                    "theme": "colored",
                     "type": "error",
-                    "hideProgressBar": true,
-                    "dangerouslyHTMLString": true,
                     "transition": "flip"
                 })
             } catch (_) {
@@ -311,10 +312,7 @@ httpClient.interceptors.response.use(
         // 7.3. Otros errores (por ejemplo, 500 en servidor)
         try {
             useNotification(ERROR_MESSAGES.errorProcesar, {
-                "theme": "colored",
                 "type": "error",
-                "hideProgressBar": true,
-                "dangerouslyHTMLString": true,
                 "transition": "flip"
             })
         } catch (_) {

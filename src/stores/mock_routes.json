@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "nombre": "Configuración",
+    "nombre_uri": null,
+    "uri": null,
+    "icono": "mdi-cog",
+    "mostrar": true,
+    "orden": null,
+    "ruta_padre_id": null,
+    "updated_at": null,
+    "childs": [
+      {
+        "id": 3,
+        "nombre": "Usuarios",
+        "nombre_uri": "listUsers",
+        "uri": "/list-usuarios",
+        "icono": null,
+        "mostrar": true,
+        "orden": null,
+        "ruta_padre_id": 2,
+        "updated_at": null
+      },
+      {
+        "id": 4,
+        "nombre": "Roles",
+        "nombre_uri": "listRoles",
+        "uri": "/list-roles",
+        "icono": null,
+        "mostrar": true,
+        "orden": null,
+        "ruta_padre_id": 2,
+        "updated_at": null
+      },
+      {
+        "id": 5,
+        "nombre": "Permisos",
+        "nombre_uri": "listPermissions",
+        "uri": "/list-permisos",
+        "icono": null,
+        "mostrar": true,
+        "orden": null,
+        "ruta_padre_id": 2,
+        "updated_at": null
+      },
+      {
+        "id": 6,
+        "nombre": "Bitácora",
+        "nombre_uri": "listLogs",
+        "uri": "/bitacora",
+        "icono": null,
+        "mostrar": true,
+        "orden": null,
+        "ruta_padre_id": 2,
+        "updated_at": null
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "nombre": "Mi cuenta",
+    "nombre_uri": "mineAccount",
+    "uri": "/mi-cuenta",
+    "icono": "mdi-account-circle",
+    "mostrar": true,
+    "orden": null,
+    "ruta_padre_id": null,
+    "updated_at": null,
+    "childs": []
+  }
+]

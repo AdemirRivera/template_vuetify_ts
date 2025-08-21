@@ -66,7 +66,7 @@ declare global {
   const useMutation: typeof import('@tanstack/vue-query')['useMutation']
   const useNotification: typeof import('vue3-toastify')['toast']
   const useQuery: typeof import('@tanstack/vue-query')['useQuery']
-  const useQueryClient: typeof import('@tanstack/vue-query')['useQueryClient ']
+  const useQueryClient: typeof import('@tanstack/vue-query')['useQueryClient']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
   const useSlots: typeof import('vue')['useSlots']
@@ -147,7 +147,7 @@ declare module 'vue' {
     readonly useMutation: UnwrapRef<typeof import('@tanstack/vue-query')['useMutation']>
     readonly useNotification: UnwrapRef<typeof import('vue3-toastify')['toast']>
     readonly useQuery: UnwrapRef<typeof import('@tanstack/vue-query')['useQuery']>
-    readonly useQueryClient : UnwrapRef<typeof import('@tanstack/vue-query')['useQueryClient ']>
+    readonly useQueryClient: UnwrapRef<typeof import('@tanstack/vue-query')['useQueryClient']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>

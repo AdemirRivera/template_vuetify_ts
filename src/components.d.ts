@@ -12,5 +12,6 @@ declare module 'vue' {
     ModalConfirmationComponent: typeof import('./components/ModalConfirmationComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TitleComponent: typeof import('./components/TitleComponent.vue')['default']
   }
 }

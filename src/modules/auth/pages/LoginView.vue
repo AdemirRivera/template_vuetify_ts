@@ -54,7 +54,8 @@
       />
     </div>
 
-    <br />
+    <v-divider class="mt-4 mb-2 mx-auto" inset />
+
     <div class="d-flex justify-center text-center flex-column">
       <RecoveryPasswordComponent />
     </div>
