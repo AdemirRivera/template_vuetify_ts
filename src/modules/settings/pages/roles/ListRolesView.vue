@@ -135,11 +135,7 @@ const {
     })
 })
 
-const {
-  data: roleDetail,
-  isLoading: isLoadingDetail,
-  error: errorDetail
-} = useQuery({
+const { data: roleDetail, isLoading: isLoadingDetail } = useQuery({
   queryKey: computed(() => ['detail_role', itemSelected.value?.id]),
   queryFn: () => settingsServices.getRoleById(itemSelected.value?.id || ''),
   enabled: computed(() => !!itemSelected.value?.id)
@@ -180,4 +176,13 @@ watch(
   },
   { immediate: false }
 )
+
+watch(showModalDetail, (newValue) => {
+  if (!newValue) {
+    // Delay de 300ms para que termine la animación fade-out del modal
+    setTimeout(() => {
+      itemSelected.value = null
+    }, 300)
+  }
+})
 </script>
