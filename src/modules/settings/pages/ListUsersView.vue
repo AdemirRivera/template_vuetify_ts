@@ -52,7 +52,7 @@ const listUsers = computed(() => {
 const usersQuery = useQuery({
   queryKey: ['list_users', paramsUsers],
   queryFn: () =>
-    settingsServices.getlistUsers({
+    settingsServices.getListUsers({
       page: paramsUsers.page,
       per_page: paramsUsers.perPage
     })

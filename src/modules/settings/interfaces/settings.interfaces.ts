@@ -1,3 +1,9 @@
+interface Permission {
+    id: string;
+    name: string;
+    tag: string;
+}
+
 export interface DataLogs {
     id: string;
     description: string;
@@ -26,4 +32,12 @@ export interface DataUsers {
     expires_at_code_two_factor: null;
     created_at_code_two_factor: null;
     google_secret_key_2fa: null;
+}
+
+export interface DataRoleById {
+    id: string;
+    name: string;
+    activo: boolean;
+    created_at: string;
+    permissions: Permission[];
 }
