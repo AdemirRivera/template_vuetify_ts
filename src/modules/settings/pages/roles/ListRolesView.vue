@@ -69,6 +69,7 @@
                 :class="`cursor-pointer ${
                   role.activo ? 'text-blue-darken-2' : 'text-grey-lighten-1'
                 }`"
+                @click="openModalDetail(role)"
               >
                 Ver permisos
               </span>
@@ -80,6 +81,11 @@
         </v-col>
       </v-row>
     </Transition>
+
+    <modal-detail-role-component
+      v-model="showModalDetail"
+      :role-detail="roleDetail"
+    />
 
     <modal-confirmation-component
       @after-leave="itemSelected = null"
@@ -105,14 +111,11 @@
 import settingsServices from '../../services/settings.services'
 import type { DataRoles } from '../../interfaces/settings.interfaces'
 
-const paramsRoles = reactive({
-  page: 1,
-  perPage: 10
-})
+import ModalDetailRoleComponent from '../../components/ModalDetailRoleComponent.vue'
 
-const totalItems = ref(0)
 const itemSelected = ref<DataRoles | null>(null)
 const showModalStatus = ref(false)
+const showModalDetail = ref(false)
 
 const listRoles = computed(() => {
   const data = rolesQuery.value?.data || []
@@ -124,12 +127,22 @@ const {
   data: rolesQuery,
   refetch
 } = useQuery({
-  queryKey: ['list_roles', paramsRoles],
+  queryKey: ['list_roles'],
   queryFn: () =>
     settingsServices.getListRoles({
-      page: paramsRoles.page,
-      per_page: paramsRoles.perPage
+      page: 1,
+      per_page: 100
     })
+})
+
+const {
+  data: roleDetail,
+  isLoading: isLoadingDetail,
+  error: errorDetail
+} = useQuery({
+  queryKey: computed(() => ['detail_role', itemSelected.value?.id]),
+  queryFn: () => settingsServices.getRoleById(itemSelected.value?.id || ''),
+  enabled: computed(() => !!itemSelected.value?.id)
 })
 
 const roleMutation = useMutation({
@@ -143,18 +156,28 @@ const roleMutation = useMutation({
   }
 })
 
-watch(
-  () => rolesQuery.value?.pagination.total,
-  newTotal => {
-    if (newTotal !== undefined && newTotal !== null) {
-      totalItems.value = newTotal
-    }
-  }
-)
-
 const changeStatusRole = () => {
   if (itemSelected.value) {
     roleMutation.mutate(itemSelected.value.id)
   }
 }
+
+const openModalDetail = (role: DataRoles) => {
+  if (roleDetail.value?.id === role.id) {
+    showModalDetail.value = true
+    return
+  }
+
+  itemSelected.value = role
+}
+
+watch(
+  [roleDetail, isLoadingDetail],
+  ([newRoleDetail, newIsLoading]) => {
+    if (newRoleDetail && !newIsLoading && itemSelected.value) {
+      showModalDetail.value = true
+    }
+  },
+  { immediate: false }
+)
 </script>
