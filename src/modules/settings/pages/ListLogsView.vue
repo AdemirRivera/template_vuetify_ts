@@ -28,8 +28,14 @@
       @update:options="onPaginate"
     >
       <template v-slot:item.error="{ item }">
-        <div class="d-flex align-center">
-          <p>
+        <div class="d-flex flex-column flex-sm-row align-center">
+          <!-- En pantallas XS (móviles): truncar texto largo -->
+          <p class="d-xs-block d-sm-none">
+            {{ truncateText(item) }}
+          </p>
+
+          <!-- En pantallas SM+ (tabletas y desktop): mostrar texto completo -->
+          <p class="d-none d-sm-block">
             {{ item.message || item.description }}
           </p>
 
@@ -41,7 +47,7 @@
                 variant="text"
                 size="small"
                 color="primary"
-                class="ml-2"
+                class="ml-auto ml-sm-2"
               />
             </template>
 
@@ -193,5 +199,21 @@ const getCategoryIcon = (code: number): string => {
   if (code >= 400 && code < 500) return 'mdi-alert-circle'
   if (code >= 500 && code < 600) return 'mdi-alert-rhombus'
   return 'mdi-help-circle'
+}
+
+// Función para determinar si el texto es muy largo
+const isTextTooLong = (text: string | undefined | null): boolean => {
+  return !!(text && text.length > 50) // Ajusta este número según tus necesidades
+}
+
+// Función para truncar texto en móviles
+const truncateText = (item: any, maxLength: number = 50): string => {
+  const text = item.message || item.description || ''
+
+  if (text.length <= maxLength) {
+    return text
+  }
+
+  return text.substring(0, maxLength) + '...'
 }
 </script>
