@@ -12,110 +12,74 @@
       />
     </div>
 
-    <!-- table -->
-    <v-row dense>
-      <v-col cols="12" v-if="isLoading" class="text-center my-12">
-        <span> Cargando roles </span>
-        <v-progress-linear height="6" indeterminate rounded />
-      </v-col>
-      <v-col
-        v-else-if="listRoles.length > 0"
-        cols="12"
-        sm="4"
-        md="3"
-        v-for="role in listRoles || []"
-        :key="role.id"
-      >
-        <v-card variant="outlined">
-          <v-card-text class="d-flex flex-column pt-0 pr-0">
-            <div class="d-flex justify-space-between align-center mb-2">
-              <div>
-                <span
-                  v-text="role.activo ? 'Activo' : 'Inactivo'"
-                  :class="role.activo ? 'text-success' : 'text-error'"
-                />
-                <v-icon
-                  :icon="`${
-                    role.activo
-                      ? 'mdi-close-circle-outline'
-                      : 'mdi-check-circle-outline'
-                  }`"
+    <div v-if="isLoading" class="text-center my-12">
+      <span> Cargando roles </span>
+      <v-progress-linear height="6" indeterminate rounded />
+    </div>
+
+    <Transition name="zoom-fade" mode="out-in" appear>
+      <v-row dense v-if="!isLoading">
+        <v-col
+          v-if="listRoles && listRoles.length > 0"
+          cols="12"
+          sm="4"
+          md="3"
+          v-for="role in listRoles || []"
+          :key="role.id"
+        >
+          <v-card variant="outlined">
+            <v-card-text class="d-flex flex-column pt-0 pr-0">
+              <div class="d-flex justify-space-between align-center mb-2">
+                <div>
+                  <span
+                    v-text="role.activo ? 'Activo' : 'Inactivo'"
+                    :class="role.activo ? 'text-success' : 'text-error'"
+                  />
+                  <v-icon
+                    :icon="`${
+                      role.activo
+                        ? 'mdi-close-circle-outline'
+                        : 'mdi-check-circle-outline'
+                    }`"
+                    variant="text"
+                    size="small"
+                    :color="`${role.activo ? 'error' : 'success'}`"
+                    v-tooltip:bottom="role.activo ? 'Desactivar' : 'Activar'"
+                    @click=";(itemSelected = role), (showModalStatus = true)"
+                    class="ml-2"
+                  />
+                </div>
+                <v-btn
+                  icon="mdi-pencil"
                   variant="text"
                   size="small"
-                  :color="`${role.activo ? 'error' : 'success'}`"
-                  v-tooltip:bottom="role.activo ? 'Desactivar' : 'Activar'"
-                  @click=";(itemSelected = role), (showModalStatus = true)"
-                  class="ml-2"
+                  color="primary"
+                  @click="
+                    $router.push({ name: 'editRole', params: { id: role.id } })
+                  "
                 />
               </div>
-              <v-btn
-                icon="mdi-pencil"
-                variant="text"
-                size="small"
-                color="primary"
-                @click="
-                  $router.push({ name: 'editRole', params: { id: role.id } })
-                "
+              <span
+                :class="`text-h5 font-weight-medium ${
+                  role.activo ? '' : 'text-grey-lighten-1'
+                }`"
+                v-text="role.name"
               />
-            </div>
-            <span
-              :class="`text-h5 font-weight-medium ${
-                role.activo ? '' : 'text-grey-lighten-1'
-              }`"
-              v-text="role.name"
-            />
-            <span
-              :class="`cursor-pointer ${
-                role.activo ? 'text-blue-darken-2' : 'text-grey-lighten-1'
-              }`"
-            >
-              Ver permisos
-            </span>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" v-else class="text-center my-12">
-        <span>No hay roles disponibles</span>
-      </v-col>
-    </v-row>
-    <!-- <v-data-table-server
-      :headers="headers"
-      :items="listRoles"
-      :items-per-page="paramsRoles.perPage"
-      :page="paramsRoles.page"
-      :items-length="totalItems"
-      :loading="rolesQuery.isLoading.value"
-      @update:options="onPaginate"
-    >
-      <template v-slot:item.status="{ item }">
-        <v-chip
-          :text="item.activo ? 'Activo' : 'Inactivo'"
-          :color="item.activo ? 'success' : 'error'"
-        />
-      </template>
-      <template v-slot:item.actions="{ item }">
-        <v-btn
-          icon="mdi-pencil"
-          variant="text"
-          size="small"
-          color="primary"
-          v-tooltip:bottom="'Editar'"
-          @click="$router.push({ name: 'editRole', params: { id: item.id } })"
-        />
-        <v-btn
-          :icon="`${
-            item.activo
-              ? 'mdi-close-circle-outline'
-              : 'mdi-check-circle-outline'
-          }`"
-          variant="text"
-          size="small"
-          :color="`${item.activo ? 'error' : 'success'}`"
-          v-tooltip:bottom="item.activo ? 'Desactivar' : 'Activar'"
-          @click=";(itemSelected = item), (showModalStatus = true)"
-        />
-      </template>
-    </v-data-table-server> -->
+              <span
+                :class="`cursor-pointer ${
+                  role.activo ? 'text-blue-darken-2' : 'text-grey-lighten-1'
+                }`"
+              >
+                Ver permisos
+              </span>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col v-else cols="12" class="text-center my-12">
+          <span>No hay roles disponibles</span>
+        </v-col>
+      </v-row>
+    </Transition>
 
     <modal-confirmation-component
       @after-leave="itemSelected = null"
@@ -138,29 +102,12 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  DataTableServerOptions,
-  DataTableColumn,
-  SortItem
-} from '@/interfaces/vuetify.interfaces'
 import settingsServices from '../../services/settings.services'
-import { sortArray } from '@/utils/globalFunctions'
 import type { DataRoles } from '../../interfaces/settings.interfaces'
-
-const headers: DataTableColumn[] = [
-  { title: 'Nombre', key: 'name' },
-  { title: 'Estado', key: 'status' },
-  { title: 'Acciones', key: 'actions', sortable: false }
-]
 
 const paramsRoles = reactive({
   page: 1,
   perPage: 10
-})
-
-const sortByRoles: SortItem = reactive({
-  key: null,
-  order: null
 })
 
 const totalItems = ref(0)
@@ -169,7 +116,7 @@ const showModalStatus = ref(false)
 
 const listRoles = computed(() => {
   const data = rolesQuery.value?.data || []
-  return sortArray(sortByRoles, data)
+  return data
 })
 
 const {
@@ -204,16 +151,6 @@ watch(
     }
   }
 )
-
-const onPaginate = ({ page, itemsPerPage, sortBy }: DataTableServerOptions) => {
-  paramsRoles.page = page
-  paramsRoles.perPage = itemsPerPage
-
-  const { key = null, order = null } = sortBy[0] || {}
-
-  sortByRoles.key = key
-  sortByRoles.order = order
-}
 
 const changeStatusRole = () => {
   if (itemSelected.value) {
